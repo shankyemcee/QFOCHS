@@ -1,0 +1,7 @@
+c2t_model/run1_backup/*
+c2t_model/periodic-80.pth
+data_stories_gpt2/model_checkpoints/*
+baseline_models/doc2grnd/data/bboxes/*
+baseline_models/gptneo/data/bboxes/*
+baseline_models/bertqa/pytorch_pretrained_bert/__pycache__/*
+baseline_models/gptneo/__pycache__/*
