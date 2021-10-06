@@ -154,7 +154,7 @@ class MultiBartQA:
                             type=int,
                             help="Check dev score after every N updates")
         parser.add_argument("--eval_batch_size",
-                            default=16,
+                            default=4,
                             type=int,
                             help="Total batch size for eval.")
         parser.add_argument("--learning_rate",
@@ -249,7 +249,9 @@ class MultiBartQA:
         for e in tqdm(examples, desc='Examples'):
             # Process source information
             source_ids = []
+            source_idss = []
             source_mask = []
+            source_maskk = []
             source_len = 0
 
             source = 'chat: ' + e.source
@@ -303,8 +305,8 @@ class MultiBartQA:
                 assert len(doc_ids_) == self.args.source_max_len
                 assert len(doc_mask_) == self.args.source_max_len
 
-                source_ids.append(doc_ids_)
-                source_mask.append(doc_mask_)
+                source_idss.append(doc_ids_)
+                source_maskk.append(doc_mask_)
                 source_len = max(source_len, doc_len_)
 
             # Process target information
@@ -327,8 +329,8 @@ class MultiBartQA:
 
             f = InputFeatures(
                                 index, 
-                                source_ids, 
-                                source_mask, 
+                                source_idss, 
+                                source_maskk, 
                                 source_len, 
                                 target_ids, 
                                 target_labels, 
@@ -650,12 +652,12 @@ class MultiBartQA:
         pred, total_eval_loss, total_words = self.predict((dev_examples, dev_features))
         results = evaluate_nq(dev_examples, pred, total_eval_loss, total_words)
         if save_file:
-            with codecs.open(self.args.output_dir + 'val_predictions.txt', 'w', 'utf-8') as out:
+            with codecs.open(self.args.output_dir + 'test_predictions.txt', 'w', 'utf-8') as out:
                 for p in pred:
                     p = self.clean_text(p)
                     out.write(p + '\n')
 
-            with codecs.open(self.args.output_dir + 'val_reference.txt', 'w', 'utf-8') as out:
+            with codecs.open(self.args.output_dir + 'test_reference.txt', 'w', 'utf-8') as out:
                 for example in dev_examples:
                     target = self.clean_text(example.target)
                     out.write(target + '\n')

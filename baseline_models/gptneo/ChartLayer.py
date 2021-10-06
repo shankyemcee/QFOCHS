@@ -16,8 +16,8 @@ class ChartLayerModule(nn.Module):
     
     def forward(self, inputs_embeds):
        model_output = self.base_model(inputs_embeds = inputs_embeds)[0]
-       model_output = self.chart_embed(model_output)
-       return model_output
+       model_output2 = self.chart_embed(model_output)
+       return model_output2
 
 
 

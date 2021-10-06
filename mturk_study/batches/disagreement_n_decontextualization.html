@@ -432,7 +432,7 @@ inputElement.onchange = (e) => {
 	var label = document.createElement('label');
 	label.id = "radio_label"
 	label.innerHTML = 'Create New Answer';
-	label.setAttribute('for',  radio_new_answer.id );
+	<!-- label.setAttribute('for',  radio_new_answer.id ); -->
 	label.appendChild(radio_new_answer);
 	ulDiv.appendChild(label);
 	linebreak = document.createElement("br");
@@ -953,7 +953,7 @@ function secondary_answer(div_id,answer2) {
 			var label = document.createElement('label');
 			label.id = "radio_label"
 			label.innerHTML = 'answer1';
-			label.setAttribute('for',  radio1.id );
+			<!-- label.setAttribute('for',  radio1.id ); -->
 			label.appendChild(radio1);
 			radioDiv.appendChild(label);
 			linebreak = document.createElement("br");
@@ -968,7 +968,7 @@ function secondary_answer(div_id,answer2) {
 			var label = document.createElement('label');
 			label.id = "radio_label"
 			label.innerHTML = 'answer2';
-			label.setAttribute('for',  radio2.id );
+			<!-- label.setAttribute('for',  radio2.id ); -->
 			label.appendChild(radio2);
 			radioDiv.appendChild(label);
 			linebreak = document.createElement("br");
@@ -1517,7 +1517,7 @@ window.onload = function() {
 		console.log("form submit triggered");
 		
 		var els = document.getElementsByClassName("grid_container_questions_n_answers");
-		output_array=[['img_path','summary','question_resolution','question','answer_resolution','abstractive_answer','extractive_answer','decontextualizated_text_added','decontextualizated_text_removed','extra_added_text','title','original_answer']]
+		output_array=[['img_path','summary','question_resolution','question','answer_resolution','abstractive_answer','extractive_answer','decontextualizated_text_added','decontextualizated_text_removed', 'abstractive_text_added','abstractive_text_removed', 'extra_added_text','title','original_answer']]
 		counter = 0
 		e.preventDefault();
 		//decontextualizated_text_added-text added solely from summary
@@ -1529,6 +1529,7 @@ window.onload = function() {
 		Array.prototype.forEach.call(els, function(elem) {
 		
 		
+		extra_added_text = ""
 		
 		
 		
@@ -1546,12 +1547,16 @@ window.onload = function() {
 		
 		if (selected_answer == 'answer1') {
 		abstractive_answer = elem.querySelector(".answer1").textContent;
+		extra_added_text = abstractive_answer.replace(elem.querySelector(".answer1").cloneNode(true).querySelector("span").textContent," ")
+		<!-- console.log(abstractive_answer.replace(elem.querySelector(".answer1").cloneNode(true).querySelector("span").textContent," "));	 -->
 		}
 		else if (selected_answer == 'answer2') {
 		abstractive_answer = elem.querySelector(".answer2").textContent;
+		extra_added_text = abstractive_answer.replace(elem.querySelector(".answer2").cloneNode(true).querySelector("span").textContent," ")
 		}
 		else if (selected_answer == 'new_answer') {
 		abstractive_answer = elem.querySelector(".new_answer").textContent;
+		extra_added_text = abstractive_answer.replace(elem.querySelector(".new_answer").cloneNode(true).querySelector("span").textContent," ")
 		}
 		
 		}
@@ -1562,6 +1567,7 @@ window.onload = function() {
 				
 				abstractive_answer = elem.querySelector(".new_answer").textContent;
 				selected_answer = 'new_answer'
+				extra_added_text = abstractive_answer.replace(elem.querySelector(".new_answer").cloneNode(true).querySelector("span").textContent," ")
 				
 				}
 				
@@ -1569,6 +1575,7 @@ window.onload = function() {
 				
 				abstractive_answer = elem.querySelector(".answer1").textContent;
 				selected_answer = 'same'
+				extra_added_text = abstractive_answer.replace(elem.querySelector(".answer1").cloneNode(true).querySelector("span").textContent," ")
 				}	
 				
 		}
@@ -1585,7 +1592,6 @@ window.onload = function() {
 		  
 		});
 		extractive_answer = extractive_answer_text.join(" ")
-		extra_added_text = abstractive_answer.replace(extractive_answer,"")
 		
 		
 		
@@ -1661,6 +1667,8 @@ window.onload = function() {
 		var decontextualizated_text_added = ''
 		var decontextualizated_text_removed = ''
 		var original_answer=''
+		var abstractive_text_added = ''
+		var abstractive_text_removed = ''
 		
 		if (selected_answer == 'answer1') {
 				decontextualizated_text_added = find_decontextualized_text_added(user_answer1, extractive_answer)
@@ -1690,8 +1698,42 @@ window.onload = function() {
 		
 		
 		
+		//decontextualization on extractive answer to abstractive
+		
+		function find_abstractive_text_added(user_answer, extracted_answer) {
+		
+			user_answer_arr = user_answer.split(" ")
+			extracted_answer_arr = extracted_answer.split(" ")
+			
+			var decontextualizated_text_added = []
+			for (i=0;i<extracted_answer_arr.length;i++) {
+				if(user_answer_arr.includes(extracted_answer_arr[i]) == false) {
+				if(extra_added_text.includes(extracted_answer_arr[i]) == false) {
+					decontextualizated_text_added.push(extracted_answer_arr[i])
+					}
+				}
+			}
+			return decontextualizated_text_added.join(" ")
+		}
 		
 		
+		function find_abstractive_text_removed(user_answer, extracted_answer) {
+		
+			user_answer_arr = user_answer.split(" ")
+			extracted_answer_arr = extracted_answer.split(" ")
+			var decontextualizated_text_removed = []
+			for (i=0;i<user_answer_arr.length;i++) {
+				if(extracted_answer_arr.includes(user_answer_arr[i]) == false) {
+					decontextualizated_text_removed.push(user_answer_arr[i])
+				}
+			}
+			return decontextualizated_text_removed.join(" ")
+		}
+		
+		
+		
+		abstractive_text_added = find_abstractive_text_added(extractive_answer, abstractive_answer)
+		abstractive_text_removed = find_abstractive_text_removed(extractive_answer, abstractive_answer)
 		
 		
 		
@@ -1729,7 +1771,7 @@ window.onload = function() {
 		title = elem.querySelector(".item_chart").querySelector("h3").textContent;
 		
 		
-		output_array.push([image_path,summary,selected_question,question,selected_answer,abstractive_answer,extractive_answer,decontextualizated_text_added,decontextualizated_text_removed,extra_added_text,title,original_answer]);
+		output_array.push([image_path,summary,selected_question,question,selected_answer,abstractive_answer,extractive_answer,decontextualizated_text_added,decontextualizated_text_removed,abstractive_text_added,abstractive_text_removed,extra_added_text,title,original_answer]);
 		
 		
 		
@@ -1779,7 +1821,7 @@ window.onload = function() {
 		<!-- + output_array.map(e => e.join(",")).join("\n"); -->
 		
 		let csvContent = "data:text/csv;charset=utf-8," 
-		+ output_array.map(string => string === null ? '' : [string[0],`\"${string[1]}\"`,string[2],`\"${string[3]}\"`,string[4],`\"${string[5]}\"`,`\"${string[6]}\"`,`\"${string[7]}\"`,`\"${string[8]}\"`,`\"${string[9]}\"`, `\"${string[10]}\"`,`\"${string[11]}\"`].join(",")).join("\n");	
+		+ output_array.map(string => string === null ? '' : [string[0],`\"${string[1]}\"`,string[2],`\"${string[3]}\"`,string[4],`\"${string[5]}\"`,`\"${string[6]}\"`,`\"${string[7]}\"`,`\"${string[8]}\"`,`\"${string[9]}\"`, `\"${string[10]}\"`,`\"${string[11]}\"`, `\"${string[12]}\"`,`\"${string[13]}\"`].join(",")).join("\n");	
 		
 		
 		
