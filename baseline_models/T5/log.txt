@@ -1,0 +1,1148 @@
+10/01/2021 13:34:48 - WARNING - __main__ - Process rank: -1, device: cuda:0, n_gpu: 1distributed training: False, 16-bits training: False
+10/01/2021 13:34:48 - INFO - __main__ - Training/evaluation parameters Seq2SeqTrainingArguments(
+_n_gpu=1,
+adafactor=False,
+adam_beta1=0.9,
+adam_beta2=0.999,
+adam_epsilon=1e-08,
+dataloader_drop_last=False,
+dataloader_num_workers=0,
+dataloader_pin_memory=True,
+ddp_find_unused_parameters=None,
+debug=[],
+deepspeed=None,
+disable_tqdm=False,
+do_eval=True,
+do_predict=True,
+do_train=True,
+eval_accumulation_steps=None,
+eval_steps=500,
+evaluation_strategy=IntervalStrategy.STEPS,
+fp16=False,
+fp16_backend=auto,
+fp16_full_eval=False,
+fp16_opt_level=O1,
+generation_max_length=None,
+generation_num_beams=None,
+gradient_accumulation_steps=1,
+gradient_checkpointing=False,
+greater_is_better=False,
+group_by_length=False,
+hub_model_id=None,
+hub_strategy=HubStrategy.EVERY_SAVE,
+hub_token=<HUB_TOKEN>,
+ignore_data_skip=False,
+label_names=None,
+label_smoothing_factor=0.0,
+learning_rate=0.0005,
+length_column_name=length,
+load_best_model_at_end=True,
+local_rank=-1,
+log_level=-1,
+log_level_replica=-1,
+log_on_each_node=True,
+logging_dir=/content/drive/MyDrive/summarization/output_T5_base_QFCS/runs/Oct01_13-34-48_a9eab4034070,
+logging_first_step=False,
+logging_nan_inf_filter=True,
+logging_steps=500,
+logging_strategy=IntervalStrategy.STEPS,
+lr_scheduler_type=SchedulerType.LINEAR,
+max_grad_norm=1.0,
+max_steps=4000,
+metric_for_best_model=loss,
+mp_parameters=,
+no_cuda=False,
+num_train_epochs=4.0,
+output_dir=/content/drive/MyDrive/summarization/output_T5_base_QFCS,
+overwrite_output_dir=True,
+past_index=-1,
+per_device_eval_batch_size=4,
+per_device_train_batch_size=4,
+predict_with_generate=True,
+prediction_loss_only=False,
+push_to_hub=False,
+push_to_hub_model_id=None,
+push_to_hub_organization=None,
+push_to_hub_token=<PUSH_TO_HUB_TOKEN>,
+remove_unused_columns=True,
+report_to=['tensorboard'],
+resume_from_checkpoint=None,
+run_name=/content/drive/MyDrive/summarization/output_T5_base_QFCS,
+save_on_each_node=False,
+save_steps=500,
+save_strategy=IntervalStrategy.STEPS,
+save_total_limit=None,
+seed=42,
+sharded_ddp=[],
+skip_memory_metrics=True,
+sortish_sampler=False,
+tpu_metrics_debug=False,
+tpu_num_cores=None,
+use_legacy_prediction_loop=False,
+warmup_ratio=0.0,
+warmup_steps=0,
+weight_decay=0.0,
+xpu_backend=None,
+)
+10/01/2021 13:34:49 - WARNING - datasets.builder - Using custom data configuration default-d34e82f77ff30bf5
+10/01/2021 13:34:49 - INFO - datasets.builder - Overwrite dataset info from restored data version.
+10/01/2021 13:34:49 - INFO - datasets.info - Loading Dataset info from /root/.cache/huggingface/datasets/csv/default-d34e82f77ff30bf5/0.0.0/9144e0a4e8435090117cea53e6c7537173ef2304525df4a077c435d8ee7828ff
+10/01/2021 13:34:49 - WARNING - datasets.builder - Reusing dataset csv (/root/.cache/huggingface/datasets/csv/default-d34e82f77ff30bf5/0.0.0/9144e0a4e8435090117cea53e6c7537173ef2304525df4a077c435d8ee7828ff)
+10/01/2021 13:34:49 - INFO - datasets.info - Loading Dataset info from /root/.cache/huggingface/datasets/csv/default-d34e82f77ff30bf5/0.0.0/9144e0a4e8435090117cea53e6c7537173ef2304525df4a077c435d8ee7828ff
+100% 3/3 [00:00<00:00, 138.08it/s]
+[INFO|configuration_utils.py:583] 2021-10-01 13:34:50,022 >> loading configuration file https://huggingface.co/t5-base/resolve/main/config.json from cache at /root/.cache/huggingface/transformers/91e9fe874e06c44883b535d6c950b8b89d6eaa3298d8e7fb3b2c78039e9f8b7b.66b9637a52aa11e9285cdd6e668cc0df14b3bcf0b6674cf3ba5353c542649637
+[INFO|configuration_utils.py:620] 2021-10-01 13:34:50,024 >> Model config T5Config {
+  "architectures": [
+    "T5WithLMHeadModel"
+  ],
+  "d_ff": 3072,
+  "d_kv": 64,
+  "d_model": 768,
+  "decoder_start_token_id": 0,
+  "dropout_rate": 0.1,
+  "eos_token_id": 1,
+  "feed_forward_proj": "relu",
+  "initializer_factor": 1.0,
+  "is_encoder_decoder": true,
+  "layer_norm_epsilon": 1e-06,
+  "model_type": "t5",
+  "n_positions": 512,
+  "num_decoder_layers": 12,
+  "num_heads": 12,
+  "num_layers": 12,
+  "output_past": true,
+  "pad_token_id": 0,
+  "relative_attention_num_buckets": 32,
+  "task_specific_params": {
+    "summarization": {
+      "early_stopping": true,
+      "length_penalty": 2.0,
+      "max_length": 200,
+      "min_length": 30,
+      "no_repeat_ngram_size": 3,
+      "num_beams": 4,
+      "prefix": "summarize: "
+    },
+    "translation_en_to_de": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to German: "
+    },
+    "translation_en_to_fr": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to French: "
+    },
+    "translation_en_to_ro": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to Romanian: "
+    }
+  },
+  "transformers_version": "4.12.0.dev0",
+  "use_cache": true,
+  "vocab_size": 32128
+}
+
+[INFO|tokenization_auto.py:334] 2021-10-01 13:34:50,788 >> Could not locate the tokenizer configuration file, will try to use the model config instead.
+[INFO|configuration_utils.py:583] 2021-10-01 13:34:51,549 >> loading configuration file https://huggingface.co/t5-base/resolve/main/config.json from cache at /root/.cache/huggingface/transformers/91e9fe874e06c44883b535d6c950b8b89d6eaa3298d8e7fb3b2c78039e9f8b7b.66b9637a52aa11e9285cdd6e668cc0df14b3bcf0b6674cf3ba5353c542649637
+[INFO|configuration_utils.py:620] 2021-10-01 13:34:51,550 >> Model config T5Config {
+  "architectures": [
+    "T5WithLMHeadModel"
+  ],
+  "d_ff": 3072,
+  "d_kv": 64,
+  "d_model": 768,
+  "decoder_start_token_id": 0,
+  "dropout_rate": 0.1,
+  "eos_token_id": 1,
+  "feed_forward_proj": "relu",
+  "initializer_factor": 1.0,
+  "is_encoder_decoder": true,
+  "layer_norm_epsilon": 1e-06,
+  "model_type": "t5",
+  "n_positions": 512,
+  "num_decoder_layers": 12,
+  "num_heads": 12,
+  "num_layers": 12,
+  "output_past": true,
+  "pad_token_id": 0,
+  "relative_attention_num_buckets": 32,
+  "task_specific_params": {
+    "summarization": {
+      "early_stopping": true,
+      "length_penalty": 2.0,
+      "max_length": 200,
+      "min_length": 30,
+      "no_repeat_ngram_size": 3,
+      "num_beams": 4,
+      "prefix": "summarize: "
+    },
+    "translation_en_to_de": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to German: "
+    },
+    "translation_en_to_fr": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to French: "
+    },
+    "translation_en_to_ro": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to Romanian: "
+    }
+  },
+  "transformers_version": "4.12.0.dev0",
+  "use_cache": true,
+  "vocab_size": 32128
+}
+
+[INFO|tokenization_utils_base.py:1741] 2021-10-01 13:34:56,139 >> loading file https://huggingface.co/t5-base/resolve/main/spiece.model from cache at /root/.cache/huggingface/transformers/684a47ca6257e4ca71f0037771464c5b323e945fbc58697d2fad8a7dd1a2f8ba.3b69006860e7b5d0a63ffdddc01ddcd6b7c318a6f4fd793596552c741734c62d
+[INFO|tokenization_utils_base.py:1741] 2021-10-01 13:34:56,139 >> loading file https://huggingface.co/t5-base/resolve/main/tokenizer.json from cache at /root/.cache/huggingface/transformers/90de37880b5ff5ac7ab70ff0bd369f207e9b74133fa153c163d14c5bb0116207.8627f1bd5d270a9fd2e5a51c8bec3223896587cc3cfe13edeabb0992ab43c529
+[INFO|tokenization_utils_base.py:1741] 2021-10-01 13:34:56,139 >> loading file https://huggingface.co/t5-base/resolve/main/added_tokens.json from cache at None
+[INFO|tokenization_utils_base.py:1741] 2021-10-01 13:34:56,139 >> loading file https://huggingface.co/t5-base/resolve/main/special_tokens_map.json from cache at None
+[INFO|tokenization_utils_base.py:1741] 2021-10-01 13:34:56,139 >> loading file https://huggingface.co/t5-base/resolve/main/tokenizer_config.json from cache at None
+[INFO|configuration_utils.py:583] 2021-10-01 13:34:56,899 >> loading configuration file https://huggingface.co/t5-base/resolve/main/config.json from cache at /root/.cache/huggingface/transformers/91e9fe874e06c44883b535d6c950b8b89d6eaa3298d8e7fb3b2c78039e9f8b7b.66b9637a52aa11e9285cdd6e668cc0df14b3bcf0b6674cf3ba5353c542649637
+[INFO|configuration_utils.py:620] 2021-10-01 13:34:56,900 >> Model config T5Config {
+  "architectures": [
+    "T5WithLMHeadModel"
+  ],
+  "d_ff": 3072,
+  "d_kv": 64,
+  "d_model": 768,
+  "decoder_start_token_id": 0,
+  "dropout_rate": 0.1,
+  "eos_token_id": 1,
+  "feed_forward_proj": "relu",
+  "initializer_factor": 1.0,
+  "is_encoder_decoder": true,
+  "layer_norm_epsilon": 1e-06,
+  "model_type": "t5",
+  "n_positions": 512,
+  "num_decoder_layers": 12,
+  "num_heads": 12,
+  "num_layers": 12,
+  "output_past": true,
+  "pad_token_id": 0,
+  "relative_attention_num_buckets": 32,
+  "task_specific_params": {
+    "summarization": {
+      "early_stopping": true,
+      "length_penalty": 2.0,
+      "max_length": 200,
+      "min_length": 30,
+      "no_repeat_ngram_size": 3,
+      "num_beams": 4,
+      "prefix": "summarize: "
+    },
+    "translation_en_to_de": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to German: "
+    },
+    "translation_en_to_fr": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to French: "
+    },
+    "translation_en_to_ro": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to Romanian: "
+    }
+  },
+  "transformers_version": "4.12.0.dev0",
+  "use_cache": true,
+  "vocab_size": 32128
+}
+
+[INFO|modeling_utils.py:1323] 2021-10-01 13:34:57,799 >> loading weights file https://huggingface.co/t5-base/resolve/main/pytorch_model.bin from cache at /root/.cache/huggingface/transformers/ab4e948915b067f5cb6e5105f6f85044fd717b133f43240db67899a8fc7b29a2.26934c75adf19ceac3c268b721ba353356b7609c45f5627550326f275a2163b4
+[INFO|modeling_utils.py:1588] 2021-10-01 13:35:11,800 >> All model checkpoint weights were used when initializing T5ForConditionalGeneration.
+
+[INFO|modeling_utils.py:1597] 2021-10-01 13:35:11,800 >> All the weights of T5ForConditionalGeneration were initialized from the model checkpoint at t5-base.
+If your task is similar to the task the model of the checkpoint was trained on, you can already use T5ForConditionalGeneration for predictions without further training.
+10/01/2021 13:35:12 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /root/.cache/huggingface/datasets/csv/default-d34e82f77ff30bf5/0.0.0/9144e0a4e8435090117cea53e6c7537173ef2304525df4a077c435d8ee7828ff/cache-b1a1bbeecf0e11ed.arrow
+10/01/2021 13:35:12 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /root/.cache/huggingface/datasets/csv/default-d34e82f77ff30bf5/0.0.0/9144e0a4e8435090117cea53e6c7537173ef2304525df4a077c435d8ee7828ff/cache-f065828d651a347a.arrow
+10/01/2021 13:35:12 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /root/.cache/huggingface/datasets/csv/default-d34e82f77ff30bf5/0.0.0/9144e0a4e8435090117cea53e6c7537173ef2304525df4a077c435d8ee7828ff/cache-5c17c8b1368e4f53.arrow
+10/01/2021 13:35:13 - INFO - datasets.load - Found main folder for metric https://raw.githubusercontent.com/huggingface/datasets/1.12.1/metrics/rouge/rouge.py at /root/.cache/huggingface/modules/datasets_modules/metrics/rouge
+10/01/2021 13:35:13 - INFO - datasets.load - Found specific version folder for metric https://raw.githubusercontent.com/huggingface/datasets/1.12.1/metrics/rouge/rouge.py at /root/.cache/huggingface/modules/datasets_modules/metrics/rouge/2b73d5eb463209373e9d21a95decb226d4164bdca4c361b8dfad295ec82bc62e
+10/01/2021 13:35:13 - INFO - datasets.load - Found script file from https://raw.githubusercontent.com/huggingface/datasets/1.12.1/metrics/rouge/rouge.py to /root/.cache/huggingface/modules/datasets_modules/metrics/rouge/2b73d5eb463209373e9d21a95decb226d4164bdca4c361b8dfad295ec82bc62e/rouge.py
+10/01/2021 13:35:13 - INFO - datasets.load - Couldn't find dataset infos file at https://raw.githubusercontent.com/huggingface/datasets/1.12.1/metrics/rouge/dataset_infos.json
+10/01/2021 13:35:13 - INFO - datasets.load - Found metadata file for metric https://raw.githubusercontent.com/huggingface/datasets/1.12.1/metrics/rouge/rouge.py at /root/.cache/huggingface/modules/datasets_modules/metrics/rouge/2b73d5eb463209373e9d21a95decb226d4164bdca4c361b8dfad295ec82bc62e/rouge.json
+[INFO|trainer.py:417] 2021-10-01 13:35:17,496 >> max_steps is given, it will override any value given in num_train_epochs
+[INFO|trainer.py:1196] 2021-10-01 13:35:17,511 >> ***** Running training *****
+[INFO|trainer.py:1197] 2021-10-01 13:35:17,511 >>   Num examples = 1577
+[INFO|trainer.py:1198] 2021-10-01 13:35:17,511 >>   Num Epochs = 11
+[INFO|trainer.py:1199] 2021-10-01 13:35:17,511 >>   Instantaneous batch size per device = 4
+[INFO|trainer.py:1200] 2021-10-01 13:35:17,511 >>   Total train batch size (w. parallel, distributed & accumulation) = 4
+[INFO|trainer.py:1201] 2021-10-01 13:35:17,511 >>   Gradient Accumulation steps = 1
+[INFO|trainer.py:1202] 2021-10-01 13:35:17,511 >>   Total optimization steps = 4000
+{'loss': 1.6802, 'learning_rate': 0.0004375, 'epoch': 1.27}
+ 12% 500/4000 [02:19<16:23,  3.56it/s][INFO|trainer.py:2235] 2021-10-01 13:37:37,458 >> ***** Running Evaluation *****
+[INFO|trainer.py:2237] 2021-10-01 13:37:37,458 >>   Num examples = 338
+[INFO|trainer.py:2240] 2021-10-01 13:37:37,458 >>   Batch size = 4
+
+  0% 0/85 [00:00<?, ?it/s]
+  2% 2/85 [00:00<00:13,  6.11it/s]
+  4% 3/85 [00:00<00:20,  3.94it/s]
+  5% 4/85 [00:01<00:24,  3.37it/s]
+  6% 5/85 [00:01<00:24,  3.26it/s]
+  7% 6/85 [00:01<00:24,  3.17it/s]
+  8% 7/85 [00:02<00:25,  3.04it/s]
+  9% 8/85 [00:02<00:26,  2.93it/s]
+ 11% 9/85 [00:02<00:26,  2.83it/s]
+ 12% 10/85 [00:03<00:26,  2.83it/s]
+ 13% 11/85 [00:03<00:26,  2.84it/s]
+ 14% 12/85 [00:03<00:26,  2.71it/s]
+ 15% 13/85 [00:04<00:27,  2.61it/s]
+ 16% 14/85 [00:04<00:27,  2.55it/s]
+ 18% 15/85 [00:05<00:27,  2.51it/s]
+ 19% 16/85 [00:05<00:26,  2.64it/s]
+ 20% 17/85 [00:05<00:26,  2.59it/s]
+ 21% 18/85 [00:06<00:24,  2.69it/s]
+ 22% 19/85 [00:06<00:23,  2.78it/s]
+ 24% 20/85 [00:07<00:24,  2.66it/s]
+ 25% 21/85 [00:07<00:22,  2.79it/s]
+ 26% 22/85 [00:07<00:22,  2.80it/s]
+ 27% 23/85 [00:08<00:21,  2.89it/s]
+ 28% 24/85 [00:08<00:21,  2.84it/s]
+ 29% 25/85 [00:08<00:20,  2.90it/s]
+ 31% 26/85 [00:09<00:19,  2.95it/s]
+ 32% 27/85 [00:09<00:20,  2.88it/s]
+ 33% 28/85 [00:09<00:19,  2.95it/s]
+ 34% 29/85 [00:10<00:19,  2.88it/s]
+ 35% 30/85 [00:10<00:18,  2.92it/s]
+ 36% 31/85 [00:10<00:19,  2.77it/s]
+ 38% 32/85 [00:11<00:19,  2.77it/s]
+ 39% 33/85 [00:11<00:18,  2.83it/s]
+ 40% 34/85 [00:11<00:18,  2.81it/s]
+ 41% 35/85 [00:12<00:17,  2.92it/s]
+ 42% 36/85 [00:12<00:16,  2.89it/s]
+ 44% 37/85 [00:12<00:16,  2.90it/s]
+ 45% 38/85 [00:13<00:15,  2.95it/s]
+ 46% 39/85 [00:13<00:15,  2.98it/s]
+ 47% 40/85 [00:13<00:15,  2.88it/s]
+ 48% 41/85 [00:14<00:15,  2.90it/s]
+ 49% 42/85 [00:14<00:14,  2.92it/s]
+ 51% 43/85 [00:14<00:14,  2.95it/s]
+ 52% 44/85 [00:15<00:14,  2.88it/s]
+ 53% 45/85 [00:15<00:14,  2.85it/s]
+ 54% 46/85 [00:15<00:13,  2.90it/s]
+ 55% 47/85 [00:16<00:13,  2.81it/s]
+ 56% 48/85 [00:16<00:12,  2.86it/s]
+ 58% 49/85 [00:17<00:12,  2.87it/s]
+ 59% 50/85 [00:17<00:12,  2.79it/s]
+ 60% 51/85 [00:17<00:12,  2.68it/s]
+ 61% 52/85 [00:18<00:12,  2.73it/s]
+ 62% 53/85 [00:18<00:11,  2.80it/s]
+ 64% 54/85 [00:18<00:10,  2.88it/s]
+ 65% 55/85 [00:19<00:10,  2.82it/s]
+ 66% 56/85 [00:19<00:10,  2.68it/s]
+ 67% 57/85 [00:20<00:10,  2.64it/s]
+ 68% 58/85 [00:20<00:10,  2.60it/s]
+ 69% 59/85 [00:20<00:10,  2.49it/s]
+ 71% 60/85 [00:21<00:09,  2.61it/s]
+ 72% 61/85 [00:21<00:08,  2.72it/s]
+ 73% 62/85 [00:21<00:08,  2.82it/s]
+ 74% 63/85 [00:22<00:07,  2.80it/s]
+ 75% 64/85 [00:22<00:07,  2.70it/s]
+ 76% 65/85 [00:22<00:07,  2.69it/s]
+ 78% 66/85 [00:23<00:07,  2.68it/s]
+ 79% 67/85 [00:23<00:06,  2.80it/s]
+ 80% 68/85 [00:24<00:06,  2.76it/s]
+ 81% 69/85 [00:24<00:05,  2.80it/s]
+ 82% 70/85 [00:24<00:05,  2.80it/s]
+ 84% 71/85 [00:25<00:04,  2.83it/s]
+ 85% 72/85 [00:25<00:04,  2.77it/s]
+ 86% 73/85 [00:25<00:04,  2.88it/s]
+ 87% 74/85 [00:26<00:03,  2.90it/s]
+ 88% 75/85 [00:26<00:03,  2.80it/s]
+ 89% 76/85 [00:26<00:03,  2.85it/s]
+ 91% 77/85 [00:27<00:02,  2.95it/s]
+ 92% 78/85 [00:27<00:02,  2.94it/s]
+ 93% 79/85 [00:27<00:02,  2.93it/s]
+ 94% 80/85 [00:28<00:01,  2.99it/s]
+ 95% 81/85 [00:28<00:01,  2.96it/s]
+ 96% 82/85 [00:28<00:01,  2.93it/s]
+ 98% 83/85 [00:29<00:00,  2.88it/s]
+ 99% 84/85 [00:29<00:00,  2.90it/s]
+100% 85/85 [00:29<00:00,  3.06it/s]10/01/2021 13:38:08 - INFO - datasets.metric - Removing /root/.cache/huggingface/metrics/rouge/default/default_experiment-1-0.arrow
+                                      
+{'eval_loss': 1.5369324684143066, 'eval_rouge1': 27.6485, 'eval_rouge2': 13.0991, 'eval_rougeL': 23.0706, 'eval_rougeLsum': 24.059, 'eval_gen_len': 18.9911, 'eval_runtime': 31.2268, 'eval_samples_per_second': 10.824, 'eval_steps_per_second': 2.722, 'epoch': 1.27}
+ 12% 500/4000 [02:51<16:23,  3.56it/s]
+100% 85/85 [00:30<00:00,  3.06it/s]
+                                   [INFO|trainer.py:1987] 2021-10-01 13:38:08,687 >> Saving model checkpoint to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-500
+[INFO|configuration_utils.py:413] 2021-10-01 13:38:08,697 >> Configuration saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-500/config.json
+[INFO|modeling_utils.py:1041] 2021-10-01 13:38:16,627 >> Model weights saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-500/pytorch_model.bin
+[INFO|tokenization_utils_base.py:2033] 2021-10-01 13:38:16,637 >> tokenizer config file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-500/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2039] 2021-10-01 13:38:16,641 >> Special tokens file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-500/special_tokens_map.json
+[INFO|tokenization_t5_fast.py:159] 2021-10-01 13:38:16,703 >> Copy vocab file to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-500/spiece.model
+{'loss': 1.1789, 'learning_rate': 0.000375, 'epoch': 2.53}
+ 25% 1000/4000 [05:38<13:29,  3.71it/s][INFO|trainer.py:2235] 2021-10-01 13:40:56,009 >> ***** Running Evaluation *****
+[INFO|trainer.py:2237] 2021-10-01 13:40:56,009 >>   Num examples = 338
+[INFO|trainer.py:2240] 2021-10-01 13:40:56,009 >>   Batch size = 4
+
+  0% 0/85 [00:00<?, ?it/s]
+  2% 2/85 [00:00<00:13,  6.33it/s]
+  4% 3/85 [00:00<00:20,  3.99it/s]
+  5% 4/85 [00:01<00:23,  3.41it/s]
+  6% 5/85 [00:01<00:24,  3.27it/s]
+  7% 6/85 [00:01<00:25,  3.13it/s]
+  8% 7/85 [00:02<00:25,  3.02it/s]
+  9% 8/85 [00:02<00:26,  2.94it/s]
+ 11% 9/85 [00:02<00:26,  2.83it/s]
+ 12% 10/85 [00:03<00:26,  2.87it/s]
+ 13% 11/85 [00:03<00:25,  2.85it/s]
+ 14% 12/85 [00:03<00:26,  2.72it/s]
+ 15% 13/85 [00:04<00:27,  2.63it/s]
+ 16% 14/85 [00:04<00:27,  2.56it/s]
+ 18% 15/85 [00:05<00:27,  2.55it/s]
+ 19% 16/85 [00:05<00:26,  2.63it/s]
+ 20% 17/85 [00:05<00:26,  2.53it/s]
+ 21% 18/85 [00:06<00:25,  2.65it/s]
+ 22% 19/85 [00:06<00:24,  2.70it/s]
+ 24% 20/85 [00:07<00:25,  2.57it/s]
+ 25% 21/85 [00:07<00:23,  2.74it/s]
+ 26% 22/85 [00:07<00:22,  2.76it/s]
+ 27% 23/85 [00:08<00:21,  2.87it/s]
+ 28% 24/85 [00:08<00:21,  2.81it/s]
+ 29% 25/85 [00:08<00:21,  2.83it/s]
+ 31% 26/85 [00:09<00:20,  2.93it/s]
+ 32% 27/85 [00:09<00:20,  2.90it/s]
+ 33% 28/85 [00:09<00:19,  2.97it/s]
+ 34% 29/85 [00:10<00:18,  2.95it/s]
+ 35% 30/85 [00:10<00:18,  3.03it/s]
+ 36% 31/85 [00:10<00:19,  2.81it/s]
+ 38% 32/85 [00:11<00:19,  2.79it/s]
+ 39% 33/85 [00:11<00:18,  2.82it/s]
+ 40% 34/85 [00:11<00:18,  2.77it/s]
+ 41% 35/85 [00:12<00:17,  2.90it/s]
+ 42% 36/85 [00:12<00:16,  2.90it/s]
+ 44% 37/85 [00:12<00:16,  2.92it/s]
+ 45% 38/85 [00:13<00:15,  2.97it/s]
+ 46% 39/85 [00:13<00:15,  3.00it/s]
+ 47% 40/85 [00:13<00:15,  2.83it/s]
+ 48% 41/85 [00:14<00:15,  2.86it/s]
+ 49% 42/85 [00:14<00:14,  2.89it/s]
+ 51% 43/85 [00:14<00:14,  2.91it/s]
+ 52% 44/85 [00:15<00:14,  2.91it/s]
+ 53% 45/85 [00:15<00:13,  2.89it/s]
+ 54% 46/85 [00:15<00:13,  2.90it/s]
+ 55% 47/85 [00:16<00:13,  2.83it/s]
+ 56% 48/85 [00:16<00:12,  2.85it/s]
+ 58% 49/85 [00:17<00:12,  2.86it/s]
+ 59% 50/85 [00:17<00:12,  2.82it/s]
+ 60% 51/85 [00:17<00:12,  2.66it/s]
+ 61% 52/85 [00:18<00:12,  2.72it/s]
+ 62% 53/85 [00:18<00:11,  2.79it/s]
+ 64% 54/85 [00:18<00:10,  2.86it/s]
+ 65% 55/85 [00:19<00:10,  2.79it/s]
+ 66% 56/85 [00:19<00:10,  2.69it/s]
+ 67% 57/85 [00:20<00:10,  2.62it/s]
+ 68% 58/85 [00:20<00:10,  2.64it/s]
+ 69% 59/85 [00:20<00:10,  2.47it/s]
+ 71% 60/85 [00:21<00:09,  2.67it/s]
+ 72% 61/85 [00:21<00:08,  2.77it/s]
+ 73% 62/85 [00:21<00:08,  2.84it/s]
+ 74% 63/85 [00:22<00:07,  2.83it/s]
+ 75% 64/85 [00:22<00:07,  2.78it/s]
+ 76% 65/85 [00:22<00:07,  2.73it/s]
+ 78% 66/85 [00:23<00:06,  2.77it/s]
+ 79% 67/85 [00:23<00:06,  2.90it/s]
+ 80% 68/85 [00:24<00:06,  2.77it/s]
+ 81% 69/85 [00:24<00:05,  2.86it/s]
+ 82% 70/85 [00:24<00:05,  2.86it/s]
+ 84% 71/85 [00:25<00:04,  2.85it/s]
+ 85% 72/85 [00:25<00:04,  2.83it/s]
+ 86% 73/85 [00:25<00:04,  2.90it/s]
+ 87% 74/85 [00:26<00:03,  2.92it/s]
+ 88% 75/85 [00:26<00:03,  2.83it/s]
+ 89% 76/85 [00:26<00:03,  2.84it/s]
+ 91% 77/85 [00:27<00:02,  2.95it/s]
+ 92% 78/85 [00:27<00:02,  2.95it/s]
+ 93% 79/85 [00:27<00:02,  2.93it/s]
+ 94% 80/85 [00:28<00:01,  2.98it/s]
+ 95% 81/85 [00:28<00:01,  2.94it/s]
+ 96% 82/85 [00:28<00:01,  2.89it/s]
+ 98% 83/85 [00:29<00:00,  2.86it/s]
+ 99% 84/85 [00:29<00:00,  2.92it/s]
+100% 85/85 [00:29<00:00,  3.04it/s]10/01/2021 13:41:27 - INFO - datasets.metric - Removing /root/.cache/huggingface/metrics/rouge/default/default_experiment-1-0.arrow
+                                       
+{'eval_loss': 1.5386942625045776, 'eval_rouge1': 29.144, 'eval_rouge2': 14.7134, 'eval_rougeL': 24.3988, 'eval_rougeLsum': 25.4242, 'eval_gen_len': 18.9822, 'eval_runtime': 31.1373, 'eval_samples_per_second': 10.855, 'eval_steps_per_second': 2.73, 'epoch': 2.53}
+ 25% 1000/4000 [06:09<13:29,  3.71it/s]
+100% 85/85 [00:30<00:00,  3.04it/s]
+                                   [INFO|trainer.py:1987] 2021-10-01 13:41:27,159 >> Saving model checkpoint to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1000
+[INFO|configuration_utils.py:413] 2021-10-01 13:41:27,164 >> Configuration saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1000/config.json
+[INFO|modeling_utils.py:1041] 2021-10-01 13:41:34,381 >> Model weights saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1000/pytorch_model.bin
+[INFO|tokenization_utils_base.py:2033] 2021-10-01 13:41:35,111 >> tokenizer config file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1000/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2039] 2021-10-01 13:41:35,117 >> Special tokens file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1000/special_tokens_map.json
+[INFO|tokenization_t5_fast.py:159] 2021-10-01 13:41:35,182 >> Copy vocab file to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1000/spiece.model
+{'loss': 0.8855, 'learning_rate': 0.0003125, 'epoch': 3.8}
+ 38% 1500/4000 [08:55<12:23,  3.36it/s][INFO|trainer.py:2235] 2021-10-01 13:44:12,803 >> ***** Running Evaluation *****
+[INFO|trainer.py:2237] 2021-10-01 13:44:12,803 >>   Num examples = 338
+[INFO|trainer.py:2240] 2021-10-01 13:44:12,803 >>   Batch size = 4
+
+  0% 0/85 [00:00<?, ?it/s]
+  2% 2/85 [00:00<00:13,  5.98it/s]
+  4% 3/85 [00:00<00:20,  3.92it/s]
+  5% 4/85 [00:01<00:24,  3.28it/s]
+  6% 5/85 [00:01<00:24,  3.21it/s]
+  7% 6/85 [00:01<00:25,  3.11it/s]
+  8% 7/85 [00:02<00:26,  2.96it/s]
+  9% 8/85 [00:02<00:26,  2.90it/s]
+ 11% 9/85 [00:02<00:26,  2.82it/s]
+ 12% 10/85 [00:03<00:26,  2.84it/s]
+ 13% 11/85 [00:03<00:26,  2.83it/s]
+ 14% 12/85 [00:03<00:27,  2.69it/s]
+ 15% 13/85 [00:04<00:27,  2.61it/s]
+ 16% 14/85 [00:04<00:27,  2.56it/s]
+ 18% 15/85 [00:05<00:27,  2.51it/s]
+ 19% 16/85 [00:05<00:26,  2.62it/s]
+ 20% 17/85 [00:05<00:26,  2.58it/s]
+ 21% 18/85 [00:06<00:25,  2.65it/s]
+ 22% 19/85 [00:06<00:24,  2.75it/s]
+ 24% 20/85 [00:07<00:24,  2.62it/s]
+ 25% 21/85 [00:07<00:23,  2.75it/s]
+ 26% 22/85 [00:07<00:22,  2.77it/s]
+ 27% 23/85 [00:08<00:21,  2.87it/s]
+ 28% 24/85 [00:08<00:21,  2.83it/s]
+ 29% 25/85 [00:08<00:20,  2.89it/s]
+ 31% 26/85 [00:09<00:20,  2.90it/s]
+ 32% 27/85 [00:09<00:20,  2.86it/s]
+ 33% 28/85 [00:09<00:19,  2.92it/s]
+ 34% 29/85 [00:10<00:19,  2.85it/s]
+ 35% 30/85 [00:10<00:18,  2.94it/s]
+ 36% 31/85 [00:10<00:19,  2.77it/s]
+ 38% 32/85 [00:11<00:19,  2.74it/s]
+ 39% 33/85 [00:11<00:18,  2.84it/s]
+ 40% 34/85 [00:11<00:18,  2.82it/s]
+ 41% 35/85 [00:12<00:17,  2.88it/s]
+ 42% 36/85 [00:12<00:16,  2.89it/s]
+ 44% 37/85 [00:12<00:16,  2.87it/s]
+ 45% 38/85 [00:13<00:15,  2.94it/s]
+ 46% 39/85 [00:13<00:15,  2.98it/s]
+ 47% 40/85 [00:14<00:15,  2.86it/s]
+ 48% 41/85 [00:14<00:15,  2.85it/s]
+ 49% 42/85 [00:14<00:15,  2.84it/s]
+ 51% 43/85 [00:15<00:15,  2.80it/s]
+ 52% 44/85 [00:15<00:14,  2.82it/s]
+ 53% 45/85 [00:15<00:14,  2.84it/s]
+ 54% 46/85 [00:16<00:13,  2.85it/s]
+ 55% 47/85 [00:16<00:13,  2.77it/s]
+ 56% 48/85 [00:16<00:13,  2.83it/s]
+ 58% 49/85 [00:17<00:12,  2.84it/s]
+ 59% 50/85 [00:17<00:12,  2.78it/s]
+ 60% 51/85 [00:17<00:12,  2.64it/s]
+ 61% 52/85 [00:18<00:12,  2.72it/s]
+ 62% 53/85 [00:18<00:11,  2.79it/s]
+ 64% 54/85 [00:19<00:10,  2.85it/s]
+ 65% 55/85 [00:19<00:10,  2.77it/s]
+ 66% 56/85 [00:19<00:10,  2.67it/s]
+ 67% 57/85 [00:20<00:10,  2.62it/s]
+ 68% 58/85 [00:20<00:10,  2.63it/s]
+ 69% 59/85 [00:21<00:10,  2.52it/s]
+ 71% 60/85 [00:21<00:09,  2.70it/s]
+ 72% 61/85 [00:21<00:08,  2.78it/s]
+ 73% 62/85 [00:21<00:08,  2.87it/s]
+ 74% 63/85 [00:22<00:07,  2.85it/s]
+ 75% 64/85 [00:22<00:07,  2.75it/s]
+ 76% 65/85 [00:23<00:07,  2.68it/s]
+ 78% 66/85 [00:23<00:06,  2.74it/s]
+ 79% 67/85 [00:23<00:06,  2.86it/s]
+ 80% 68/85 [00:24<00:06,  2.80it/s]
+ 81% 69/85 [00:24<00:05,  2.88it/s]
+ 82% 70/85 [00:24<00:05,  2.87it/s]
+ 84% 71/85 [00:25<00:04,  2.86it/s]
+ 85% 72/85 [00:25<00:04,  2.83it/s]
+ 86% 73/85 [00:25<00:04,  2.90it/s]
+ 87% 74/85 [00:26<00:03,  2.93it/s]
+ 88% 75/85 [00:26<00:03,  2.81it/s]
+ 89% 76/85 [00:26<00:03,  2.81it/s]
+ 91% 77/85 [00:27<00:02,  2.91it/s]
+ 92% 78/85 [00:27<00:02,  2.89it/s]
+ 93% 79/85 [00:27<00:02,  2.89it/s]
+ 94% 80/85 [00:28<00:01,  2.97it/s]
+ 95% 81/85 [00:28<00:01,  2.86it/s]
+ 96% 82/85 [00:29<00:01,  2.84it/s]
+ 98% 83/85 [00:29<00:00,  2.83it/s]
+ 99% 84/85 [00:29<00:00,  2.88it/s]
+100% 85/85 [00:29<00:00,  3.06it/s]10/01/2021 13:44:44 - INFO - datasets.metric - Removing /root/.cache/huggingface/metrics/rouge/default/default_experiment-1-0.arrow
+                                       
+{'eval_loss': 1.5969105958938599, 'eval_rouge1': 29.7996, 'eval_rouge2': 15.0184, 'eval_rougeL': 25.1112, 'eval_rougeLsum': 26.1471, 'eval_gen_len': 18.9941, 'eval_runtime': 31.3257, 'eval_samples_per_second': 10.79, 'eval_steps_per_second': 2.713, 'epoch': 3.8}
+ 38% 1500/4000 [09:26<12:23,  3.36it/s]
+100% 85/85 [00:30<00:00,  3.06it/s]
+                                   [INFO|trainer.py:1987] 2021-10-01 13:44:44,133 >> Saving model checkpoint to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1500
+[INFO|configuration_utils.py:413] 2021-10-01 13:44:44,140 >> Configuration saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1500/config.json
+[INFO|modeling_utils.py:1041] 2021-10-01 13:44:48,912 >> Model weights saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1500/pytorch_model.bin
+[INFO|tokenization_utils_base.py:2033] 2021-10-01 13:44:48,926 >> tokenizer config file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1500/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2039] 2021-10-01 13:44:48,932 >> Special tokens file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1500/special_tokens_map.json
+[INFO|tokenization_t5_fast.py:159] 2021-10-01 13:44:48,978 >> Copy vocab file to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-1500/spiece.model
+{'loss': 0.6577, 'learning_rate': 0.00025, 'epoch': 5.06}
+ 50% 2000/4000 [12:07<09:00,  3.70it/s][INFO|trainer.py:2235] 2021-10-01 13:47:24,570 >> ***** Running Evaluation *****
+[INFO|trainer.py:2237] 2021-10-01 13:47:24,570 >>   Num examples = 338
+[INFO|trainer.py:2240] 2021-10-01 13:47:24,570 >>   Batch size = 4
+
+  0% 0/85 [00:00<?, ?it/s]
+  2% 2/85 [00:00<00:13,  6.03it/s]
+  4% 3/85 [00:00<00:21,  3.88it/s]
+  5% 4/85 [00:01<00:24,  3.30it/s]
+  6% 5/85 [00:01<00:25,  3.18it/s]
+  7% 6/85 [00:01<00:25,  3.10it/s]
+  8% 7/85 [00:02<00:25,  3.01it/s]
+  9% 8/85 [00:02<00:26,  2.91it/s]
+ 11% 9/85 [00:02<00:27,  2.80it/s]
+ 12% 10/85 [00:03<00:26,  2.83it/s]
+ 13% 11/85 [00:03<00:26,  2.85it/s]
+ 14% 12/85 [00:03<00:26,  2.71it/s]
+ 15% 13/85 [00:04<00:27,  2.61it/s]
+ 16% 14/85 [00:04<00:27,  2.57it/s]
+ 18% 15/85 [00:05<00:27,  2.52it/s]
+ 19% 16/85 [00:05<00:26,  2.63it/s]
+ 20% 17/85 [00:05<00:26,  2.58it/s]
+ 21% 18/85 [00:06<00:25,  2.59it/s]
+ 22% 19/85 [00:06<00:24,  2.68it/s]
+ 24% 20/85 [00:07<00:25,  2.59it/s]
+ 25% 21/85 [00:07<00:23,  2.71it/s]
+ 26% 22/85 [00:07<00:22,  2.75it/s]
+ 27% 23/85 [00:08<00:22,  2.81it/s]
+ 28% 24/85 [00:08<00:22,  2.77it/s]
+ 29% 25/85 [00:08<00:21,  2.85it/s]
+ 31% 26/85 [00:09<00:20,  2.87it/s]
+ 32% 27/85 [00:09<00:20,  2.80it/s]
+ 33% 28/85 [00:09<00:19,  2.89it/s]
+ 34% 29/85 [00:10<00:19,  2.83it/s]
+ 35% 30/85 [00:10<00:18,  2.93it/s]
+ 36% 31/85 [00:10<00:19,  2.75it/s]
+ 38% 32/85 [00:11<00:19,  2.69it/s]
+ 39% 33/85 [00:11<00:18,  2.84it/s]
+ 40% 34/85 [00:12<00:18,  2.79it/s]
+ 41% 35/85 [00:12<00:17,  2.87it/s]
+ 42% 36/85 [00:12<00:17,  2.80it/s]
+ 44% 37/85 [00:13<00:17,  2.81it/s]
+ 45% 38/85 [00:13<00:16,  2.86it/s]
+ 46% 39/85 [00:13<00:15,  2.90it/s]
+ 47% 40/85 [00:14<00:16,  2.76it/s]
+ 48% 41/85 [00:14<00:15,  2.81it/s]
+ 49% 42/85 [00:14<00:15,  2.84it/s]
+ 51% 43/85 [00:15<00:14,  2.83it/s]
+ 52% 44/85 [00:15<00:14,  2.84it/s]
+ 53% 45/85 [00:15<00:14,  2.85it/s]
+ 54% 46/85 [00:16<00:13,  2.83it/s]
+ 55% 47/85 [00:16<00:13,  2.77it/s]
+ 56% 48/85 [00:16<00:13,  2.80it/s]
+ 58% 49/85 [00:17<00:12,  2.81it/s]
+ 59% 50/85 [00:17<00:12,  2.74it/s]
+ 60% 51/85 [00:18<00:13,  2.60it/s]
+ 61% 52/85 [00:18<00:12,  2.68it/s]
+ 62% 53/85 [00:18<00:11,  2.76it/s]
+ 64% 54/85 [00:19<00:11,  2.79it/s]
+ 65% 55/85 [00:19<00:10,  2.77it/s]
+ 66% 56/85 [00:19<00:10,  2.67it/s]
+ 67% 57/85 [00:20<00:10,  2.58it/s]
+ 68% 58/85 [00:20<00:10,  2.61it/s]
+ 69% 59/85 [00:21<00:10,  2.49it/s]
+ 71% 60/85 [00:21<00:09,  2.67it/s]
+ 72% 61/85 [00:21<00:08,  2.78it/s]
+ 73% 62/85 [00:22<00:08,  2.79it/s]
+ 74% 63/85 [00:22<00:08,  2.67it/s]
+ 75% 64/85 [00:22<00:08,  2.61it/s]
+ 76% 65/85 [00:23<00:07,  2.56it/s]
+ 78% 66/85 [00:23<00:07,  2.67it/s]
+ 79% 67/85 [00:24<00:06,  2.79it/s]
+ 80% 68/85 [00:24<00:06,  2.70it/s]
+ 81% 69/85 [00:24<00:05,  2.80it/s]
+ 82% 70/85 [00:25<00:05,  2.84it/s]
+ 84% 71/85 [00:25<00:04,  2.85it/s]
+ 85% 72/85 [00:25<00:04,  2.84it/s]
+ 86% 73/85 [00:26<00:04,  2.94it/s]
+ 87% 74/85 [00:26<00:03,  2.93it/s]
+ 88% 75/85 [00:26<00:03,  2.83it/s]
+ 89% 76/85 [00:27<00:03,  2.84it/s]
+ 91% 77/85 [00:27<00:02,  2.94it/s]
+ 92% 78/85 [00:27<00:02,  2.93it/s]
+ 93% 79/85 [00:28<00:02,  2.89it/s]
+ 94% 80/85 [00:28<00:01,  2.88it/s]
+ 95% 81/85 [00:28<00:01,  2.89it/s]
+ 96% 82/85 [00:29<00:01,  2.87it/s]
+ 98% 83/85 [00:29<00:00,  2.84it/s]
+ 99% 84/85 [00:29<00:00,  2.90it/s]
+100% 85/85 [00:30<00:00,  3.04it/s]10/01/2021 13:47:56 - INFO - datasets.metric - Removing /root/.cache/huggingface/metrics/rouge/default/default_experiment-1-0.arrow
+                                       
+{'eval_loss': 1.7854007482528687, 'eval_rouge1': 27.8789, 'eval_rouge2': 13.8814, 'eval_rougeL': 23.1134, 'eval_rougeLsum': 24.0707, 'eval_gen_len': 18.9704, 'eval_runtime': 31.5826, 'eval_samples_per_second': 10.702, 'eval_steps_per_second': 2.691, 'epoch': 5.06}
+ 50% 2000/4000 [12:38<09:00,  3.70it/s]
+100% 85/85 [00:31<00:00,  3.04it/s]
+                                   [INFO|trainer.py:1987] 2021-10-01 13:47:56,156 >> Saving model checkpoint to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2000
+[INFO|configuration_utils.py:413] 2021-10-01 13:47:56,162 >> Configuration saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2000/config.json
+[INFO|modeling_utils.py:1041] 2021-10-01 13:48:01,028 >> Model weights saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2000/pytorch_model.bin
+[INFO|tokenization_utils_base.py:2033] 2021-10-01 13:48:01,046 >> tokenizer config file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2000/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2039] 2021-10-01 13:48:01,052 >> Special tokens file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2000/special_tokens_map.json
+[INFO|tokenization_t5_fast.py:159] 2021-10-01 13:48:01,099 >> Copy vocab file to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2000/spiece.model
+{'loss': 0.474, 'learning_rate': 0.0001875, 'epoch': 6.33}
+ 62% 2500/4000 [15:22<06:31,  3.83it/s][INFO|trainer.py:2235] 2021-10-01 13:50:39,583 >> ***** Running Evaluation *****
+[INFO|trainer.py:2237] 2021-10-01 13:50:39,583 >>   Num examples = 338
+[INFO|trainer.py:2240] 2021-10-01 13:50:39,583 >>   Batch size = 4
+
+  0% 0/85 [00:00<?, ?it/s]
+  2% 2/85 [00:00<00:14,  5.92it/s]
+  4% 3/85 [00:00<00:21,  3.79it/s]
+  5% 4/85 [00:01<00:25,  3.24it/s]
+  6% 5/85 [00:01<00:25,  3.18it/s]
+  7% 6/85 [00:01<00:25,  3.08it/s]
+  8% 7/85 [00:02<00:26,  2.98it/s]
+  9% 8/85 [00:02<00:26,  2.90it/s]
+ 11% 9/85 [00:02<00:27,  2.81it/s]
+ 12% 10/85 [00:03<00:26,  2.85it/s]
+ 13% 11/85 [00:03<00:25,  2.85it/s]
+ 14% 12/85 [00:03<00:26,  2.72it/s]
+ 15% 13/85 [00:04<00:27,  2.62it/s]
+ 16% 14/85 [00:04<00:27,  2.56it/s]
+ 18% 15/85 [00:05<00:27,  2.56it/s]
+ 19% 16/85 [00:05<00:25,  2.66it/s]
+ 20% 17/85 [00:05<00:26,  2.61it/s]
+ 21% 18/85 [00:06<00:25,  2.64it/s]
+ 22% 19/85 [00:06<00:24,  2.74it/s]
+ 24% 20/85 [00:07<00:24,  2.63it/s]
+ 25% 21/85 [00:07<00:23,  2.72it/s]
+ 26% 22/85 [00:07<00:22,  2.75it/s]
+ 27% 23/85 [00:08<00:22,  2.82it/s]
+ 28% 24/85 [00:08<00:22,  2.77it/s]
+ 29% 25/85 [00:08<00:21,  2.82it/s]
+ 31% 26/85 [00:09<00:20,  2.87it/s]
+ 32% 27/85 [00:09<00:20,  2.86it/s]
+ 33% 28/85 [00:09<00:19,  2.93it/s]
+ 34% 29/85 [00:10<00:19,  2.89it/s]
+ 35% 30/85 [00:10<00:18,  2.93it/s]
+ 36% 31/85 [00:10<00:19,  2.75it/s]
+ 38% 32/85 [00:11<00:19,  2.74it/s]
+ 39% 33/85 [00:11<00:18,  2.87it/s]
+ 40% 34/85 [00:11<00:18,  2.79it/s]
+ 41% 35/85 [00:12<00:17,  2.79it/s]
+ 42% 36/85 [00:12<00:17,  2.83it/s]
+ 44% 37/85 [00:13<00:17,  2.78it/s]
+ 45% 38/85 [00:13<00:16,  2.83it/s]
+ 46% 39/85 [00:13<00:15,  2.90it/s]
+ 47% 40/85 [00:14<00:16,  2.81it/s]
+ 48% 41/85 [00:14<00:15,  2.77it/s]
+ 49% 42/85 [00:14<00:15,  2.82it/s]
+ 51% 43/85 [00:15<00:14,  2.82it/s]
+ 52% 44/85 [00:15<00:14,  2.85it/s]
+ 53% 45/85 [00:15<00:13,  2.88it/s]
+ 54% 46/85 [00:16<00:13,  2.88it/s]
+ 55% 47/85 [00:16<00:13,  2.82it/s]
+ 56% 48/85 [00:16<00:13,  2.84it/s]
+ 58% 49/85 [00:17<00:12,  2.79it/s]
+ 59% 50/85 [00:17<00:12,  2.75it/s]
+ 60% 51/85 [00:18<00:13,  2.61it/s]
+ 61% 52/85 [00:18<00:12,  2.68it/s]
+ 62% 53/85 [00:18<00:11,  2.77it/s]
+ 64% 54/85 [00:19<00:10,  2.85it/s]
+ 65% 55/85 [00:19<00:10,  2.79it/s]
+ 66% 56/85 [00:19<00:10,  2.67it/s]
+ 67% 57/85 [00:20<00:10,  2.60it/s]
+ 68% 58/85 [00:20<00:10,  2.63it/s]
+ 69% 59/85 [00:21<00:10,  2.47it/s]
+ 71% 60/85 [00:21<00:09,  2.65it/s]
+ 72% 61/85 [00:21<00:08,  2.77it/s]
+ 73% 62/85 [00:22<00:08,  2.83it/s]
+ 74% 63/85 [00:22<00:07,  2.78it/s]
+ 75% 64/85 [00:22<00:07,  2.74it/s]
+ 76% 65/85 [00:23<00:07,  2.68it/s]
+ 78% 66/85 [00:23<00:06,  2.74it/s]
+ 79% 67/85 [00:23<00:06,  2.86it/s]
+ 80% 68/85 [00:24<00:06,  2.78it/s]
+ 81% 69/85 [00:24<00:05,  2.84it/s]
+ 82% 70/85 [00:24<00:05,  2.85it/s]
+ 84% 71/85 [00:25<00:05,  2.79it/s]
+ 85% 72/85 [00:25<00:04,  2.79it/s]
+ 86% 73/85 [00:26<00:04,  2.85it/s]
+ 87% 74/85 [00:26<00:03,  2.90it/s]
+ 88% 75/85 [00:26<00:03,  2.82it/s]
+ 89% 76/85 [00:27<00:03,  2.82it/s]
+ 91% 77/85 [00:27<00:02,  2.88it/s]
+ 92% 78/85 [00:27<00:02,  2.86it/s]
+ 93% 79/85 [00:28<00:02,  2.81it/s]
+ 94% 80/85 [00:28<00:01,  2.86it/s]
+ 95% 81/85 [00:28<00:01,  2.86it/s]
+ 96% 82/85 [00:29<00:01,  2.83it/s]
+ 98% 83/85 [00:29<00:00,  2.83it/s]
+ 99% 84/85 [00:29<00:00,  2.89it/s]
+100% 85/85 [00:30<00:00,  3.04it/s]10/01/2021 13:51:11 - INFO - datasets.metric - Removing /root/.cache/huggingface/metrics/rouge/default/default_experiment-1-0.arrow
+                                       
+{'eval_loss': 1.8867875337600708, 'eval_rouge1': 28.6481, 'eval_rouge2': 14.3828, 'eval_rougeL': 23.9242, 'eval_rougeLsum': 24.8439, 'eval_gen_len': 18.9882, 'eval_runtime': 31.5274, 'eval_samples_per_second': 10.721, 'eval_steps_per_second': 2.696, 'epoch': 6.33}
+ 62% 2500/4000 [15:53<06:31,  3.83it/s]
+100% 85/85 [00:31<00:00,  3.04it/s]
+                                   [INFO|trainer.py:1987] 2021-10-01 13:51:11,117 >> Saving model checkpoint to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2500
+[INFO|configuration_utils.py:413] 2021-10-01 13:51:11,129 >> Configuration saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2500/config.json
+[INFO|modeling_utils.py:1041] 2021-10-01 13:51:15,740 >> Model weights saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2500/pytorch_model.bin
+[INFO|tokenization_utils_base.py:2033] 2021-10-01 13:51:15,775 >> tokenizer config file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2500/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2039] 2021-10-01 13:51:15,781 >> Special tokens file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2500/special_tokens_map.json
+[INFO|tokenization_t5_fast.py:159] 2021-10-01 13:51:15,890 >> Copy vocab file to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-2500/spiece.model
+{'loss': 0.3581, 'learning_rate': 0.000125, 'epoch': 7.59}
+ 75% 3000/4000 [18:34<04:32,  3.66it/s][INFO|trainer.py:2235] 2021-10-01 13:53:52,167 >> ***** Running Evaluation *****
+[INFO|trainer.py:2237] 2021-10-01 13:53:52,167 >>   Num examples = 338
+[INFO|trainer.py:2240] 2021-10-01 13:53:52,168 >>   Batch size = 4
+
+  0% 0/85 [00:00<?, ?it/s]
+  2% 2/85 [00:00<00:13,  6.17it/s]
+  4% 3/85 [00:00<00:21,  3.77it/s]
+  5% 4/85 [00:01<00:24,  3.28it/s]
+  6% 5/85 [00:01<00:24,  3.21it/s]
+  7% 6/85 [00:01<00:26,  2.99it/s]
+  8% 7/85 [00:02<00:26,  2.96it/s]
+  9% 8/85 [00:02<00:26,  2.90it/s]
+ 11% 9/85 [00:02<00:26,  2.82it/s]
+ 12% 10/85 [00:03<00:26,  2.87it/s]
+ 13% 11/85 [00:03<00:27,  2.73it/s]
+ 14% 12/85 [00:04<00:28,  2.52it/s]
+ 15% 13/85 [00:04<00:29,  2.47it/s]
+ 16% 14/85 [00:04<00:28,  2.45it/s]
+ 18% 15/85 [00:05<00:28,  2.46it/s]
+ 19% 16/85 [00:05<00:27,  2.55it/s]
+ 20% 17/85 [00:06<00:27,  2.51it/s]
+ 21% 18/85 [00:06<00:25,  2.61it/s]
+ 22% 19/85 [00:06<00:24,  2.70it/s]
+ 24% 20/85 [00:07<00:24,  2.61it/s]
+ 25% 21/85 [00:07<00:23,  2.75it/s]
+ 26% 22/85 [00:07<00:22,  2.75it/s]
+ 27% 23/85 [00:08<00:21,  2.86it/s]
+ 28% 24/85 [00:08<00:21,  2.79it/s]
+ 29% 25/85 [00:08<00:21,  2.81it/s]
+ 31% 26/85 [00:09<00:20,  2.91it/s]
+ 32% 27/85 [00:09<00:20,  2.88it/s]
+ 33% 28/85 [00:09<00:19,  2.93it/s]
+ 34% 29/85 [00:10<00:19,  2.92it/s]
+ 35% 30/85 [00:10<00:18,  2.98it/s]
+ 36% 31/85 [00:11<00:19,  2.78it/s]
+ 38% 32/85 [00:11<00:19,  2.76it/s]
+ 39% 33/85 [00:11<00:18,  2.75it/s]
+ 40% 34/85 [00:12<00:18,  2.74it/s]
+ 41% 35/85 [00:12<00:17,  2.88it/s]
+ 42% 36/85 [00:12<00:17,  2.86it/s]
+ 44% 37/85 [00:13<00:16,  2.89it/s]
+ 45% 38/85 [00:13<00:15,  2.95it/s]
+ 46% 39/85 [00:13<00:15,  2.97it/s]
+ 47% 40/85 [00:14<00:15,  2.84it/s]
+ 48% 41/85 [00:14<00:15,  2.84it/s]
+ 49% 42/85 [00:14<00:15,  2.86it/s]
+ 51% 43/85 [00:15<00:14,  2.86it/s]
+ 52% 44/85 [00:15<00:14,  2.81it/s]
+ 53% 45/85 [00:15<00:14,  2.80it/s]
+ 54% 46/85 [00:16<00:13,  2.84it/s]
+ 55% 47/85 [00:16<00:13,  2.73it/s]
+ 56% 48/85 [00:17<00:13,  2.72it/s]
+ 58% 49/85 [00:17<00:13,  2.74it/s]
+ 59% 50/85 [00:17<00:13,  2.64it/s]
+ 60% 51/85 [00:18<00:13,  2.57it/s]
+ 61% 52/85 [00:18<00:12,  2.66it/s]
+ 62% 53/85 [00:18<00:11,  2.69it/s]
+ 64% 54/85 [00:19<00:11,  2.80it/s]
+ 65% 55/85 [00:19<00:10,  2.75it/s]
+ 66% 56/85 [00:20<00:11,  2.62it/s]
+ 67% 57/85 [00:20<00:10,  2.57it/s]
+ 68% 58/85 [00:20<00:10,  2.55it/s]
+ 69% 59/85 [00:21<00:10,  2.46it/s]
+ 71% 60/85 [00:21<00:09,  2.64it/s]
+ 72% 61/85 [00:21<00:08,  2.69it/s]
+ 73% 62/85 [00:22<00:08,  2.79it/s]
+ 74% 63/85 [00:22<00:07,  2.79it/s]
+ 75% 64/85 [00:23<00:07,  2.74it/s]
+ 76% 65/85 [00:23<00:07,  2.72it/s]
+ 78% 66/85 [00:23<00:06,  2.73it/s]
+ 79% 67/85 [00:24<00:06,  2.82it/s]
+ 80% 68/85 [00:24<00:06,  2.75it/s]
+ 81% 69/85 [00:24<00:05,  2.78it/s]
+ 82% 70/85 [00:25<00:05,  2.81it/s]
+ 84% 71/85 [00:25<00:04,  2.84it/s]
+ 85% 72/85 [00:25<00:04,  2.80it/s]
+ 86% 73/85 [00:26<00:04,  2.87it/s]
+ 87% 74/85 [00:26<00:03,  2.83it/s]
+ 88% 75/85 [00:26<00:03,  2.74it/s]
+ 89% 76/85 [00:27<00:03,  2.78it/s]
+ 91% 77/85 [00:27<00:02,  2.85it/s]
+ 92% 78/85 [00:28<00:02,  2.83it/s]
+ 93% 79/85 [00:28<00:02,  2.83it/s]
+ 94% 80/85 [00:28<00:01,  2.92it/s]
+ 95% 81/85 [00:29<00:01,  2.90it/s]
+ 96% 82/85 [00:29<00:01,  2.83it/s]
+ 98% 83/85 [00:29<00:00,  2.79it/s]
+ 99% 84/85 [00:30<00:00,  2.85it/s]
+100% 85/85 [00:30<00:00,  3.05it/s]10/01/2021 13:54:23 - INFO - datasets.metric - Removing /root/.cache/huggingface/metrics/rouge/default/default_experiment-1-0.arrow
+                                       
+{'eval_loss': 2.0037965774536133, 'eval_rouge1': 29.7738, 'eval_rouge2': 15.6789, 'eval_rougeL': 25.2031, 'eval_rougeLsum': 26.1637, 'eval_gen_len': 19.0, 'eval_runtime': 31.7507, 'eval_samples_per_second': 10.645, 'eval_steps_per_second': 2.677, 'epoch': 7.59}
+ 75% 3000/4000 [19:06<04:32,  3.66it/s]
+100% 85/85 [00:31<00:00,  3.05it/s]
+                                   [INFO|trainer.py:1987] 2021-10-01 13:54:23,924 >> Saving model checkpoint to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3000
+[INFO|configuration_utils.py:413] 2021-10-01 13:54:23,930 >> Configuration saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3000/config.json
+[INFO|modeling_utils.py:1041] 2021-10-01 13:54:28,567 >> Model weights saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3000/pytorch_model.bin
+[INFO|tokenization_utils_base.py:2033] 2021-10-01 13:54:28,572 >> tokenizer config file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3000/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2039] 2021-10-01 13:54:28,577 >> Special tokens file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3000/special_tokens_map.json
+[INFO|tokenization_t5_fast.py:159] 2021-10-01 13:54:28,626 >> Copy vocab file to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3000/spiece.model
+{'loss': 0.2751, 'learning_rate': 6.25e-05, 'epoch': 8.86}
+ 88% 3500/4000 [21:48<02:12,  3.78it/s][INFO|trainer.py:2235] 2021-10-01 13:57:06,364 >> ***** Running Evaluation *****
+[INFO|trainer.py:2237] 2021-10-01 13:57:06,364 >>   Num examples = 338
+[INFO|trainer.py:2240] 2021-10-01 13:57:06,364 >>   Batch size = 4
+
+  0% 0/85 [00:00<?, ?it/s]
+  2% 2/85 [00:00<00:13,  5.95it/s]
+  4% 3/85 [00:00<00:20,  3.93it/s]
+  5% 4/85 [00:01<00:24,  3.33it/s]
+  6% 5/85 [00:01<00:25,  3.18it/s]
+  7% 6/85 [00:01<00:25,  3.09it/s]
+  8% 7/85 [00:02<00:26,  2.95it/s]
+  9% 8/85 [00:02<00:26,  2.86it/s]
+ 11% 9/85 [00:02<00:27,  2.79it/s]
+ 12% 10/85 [00:03<00:26,  2.81it/s]
+ 13% 11/85 [00:03<00:26,  2.78it/s]
+ 14% 12/85 [00:04<00:27,  2.67it/s]
+ 15% 13/85 [00:04<00:28,  2.55it/s]
+ 16% 14/85 [00:04<00:28,  2.51it/s]
+ 18% 15/85 [00:05<00:28,  2.48it/s]
+ 19% 16/85 [00:05<00:26,  2.60it/s]
+ 20% 17/85 [00:06<00:26,  2.57it/s]
+ 21% 18/85 [00:06<00:25,  2.64it/s]
+ 22% 19/85 [00:06<00:24,  2.73it/s]
+ 24% 20/85 [00:07<00:24,  2.62it/s]
+ 25% 21/85 [00:07<00:23,  2.75it/s]
+ 26% 22/85 [00:07<00:22,  2.77it/s]
+ 27% 23/85 [00:08<00:22,  2.81it/s]
+ 28% 24/85 [00:08<00:22,  2.72it/s]
+ 29% 25/85 [00:08<00:21,  2.79it/s]
+ 31% 26/85 [00:09<00:20,  2.88it/s]
+ 32% 27/85 [00:09<00:20,  2.83it/s]
+ 33% 28/85 [00:09<00:19,  2.91it/s]
+ 34% 29/85 [00:10<00:19,  2.89it/s]
+ 35% 30/85 [00:10<00:18,  2.94it/s]
+ 36% 31/85 [00:11<00:19,  2.73it/s]
+ 38% 32/85 [00:11<00:19,  2.70it/s]
+ 39% 33/85 [00:11<00:18,  2.85it/s]
+ 40% 34/85 [00:12<00:18,  2.82it/s]
+ 41% 35/85 [00:12<00:17,  2.89it/s]
+ 42% 36/85 [00:12<00:17,  2.87it/s]
+ 44% 37/85 [00:13<00:16,  2.88it/s]
+ 45% 38/85 [00:13<00:16,  2.84it/s]
+ 46% 39/85 [00:13<00:15,  2.88it/s]
+ 47% 40/85 [00:14<00:16,  2.80it/s]
+ 48% 41/85 [00:14<00:15,  2.83it/s]
+ 49% 42/85 [00:14<00:15,  2.86it/s]
+ 51% 43/85 [00:15<00:14,  2.86it/s]
+ 52% 44/85 [00:15<00:14,  2.84it/s]
+ 53% 45/85 [00:15<00:14,  2.83it/s]
+ 54% 46/85 [00:16<00:13,  2.82it/s]
+ 55% 47/85 [00:16<00:13,  2.78it/s]
+ 56% 48/85 [00:16<00:13,  2.83it/s]
+ 58% 49/85 [00:17<00:12,  2.84it/s]
+ 59% 50/85 [00:17<00:12,  2.81it/s]
+ 60% 51/85 [00:18<00:12,  2.70it/s]
+ 61% 52/85 [00:18<00:12,  2.70it/s]
+ 62% 53/85 [00:18<00:11,  2.76it/s]
+ 64% 54/85 [00:19<00:10,  2.84it/s]
+ 65% 55/85 [00:19<00:10,  2.73it/s]
+ 66% 56/85 [00:19<00:10,  2.64it/s]
+ 67% 57/85 [00:20<00:10,  2.56it/s]
+ 68% 58/85 [00:20<00:10,  2.59it/s]
+ 69% 59/85 [00:21<00:10,  2.47it/s]
+ 71% 60/85 [00:21<00:09,  2.59it/s]
+ 72% 61/85 [00:21<00:08,  2.72it/s]
+ 73% 62/85 [00:22<00:08,  2.81it/s]
+ 74% 63/85 [00:22<00:07,  2.79it/s]
+ 75% 64/85 [00:22<00:07,  2.72it/s]
+ 76% 65/85 [00:23<00:07,  2.68it/s]
+ 78% 66/85 [00:23<00:06,  2.72it/s]
+ 79% 67/85 [00:23<00:06,  2.85it/s]
+ 80% 68/85 [00:24<00:06,  2.77it/s]
+ 81% 69/85 [00:24<00:05,  2.80it/s]
+ 82% 70/85 [00:25<00:05,  2.82it/s]
+ 84% 71/85 [00:25<00:04,  2.86it/s]
+ 85% 72/85 [00:25<00:04,  2.82it/s]
+ 86% 73/85 [00:26<00:04,  2.92it/s]
+ 87% 74/85 [00:26<00:03,  2.84it/s]
+ 88% 75/85 [00:26<00:03,  2.73it/s]
+ 89% 76/85 [00:27<00:03,  2.77it/s]
+ 91% 77/85 [00:27<00:02,  2.87it/s]
+ 92% 78/85 [00:27<00:02,  2.86it/s]
+ 93% 79/85 [00:28<00:02,  2.87it/s]
+ 94% 80/85 [00:28<00:01,  2.93it/s]
+ 95% 81/85 [00:28<00:01,  2.92it/s]
+ 96% 82/85 [00:29<00:01,  2.86it/s]
+ 98% 83/85 [00:29<00:00,  2.82it/s]
+ 99% 84/85 [00:29<00:00,  2.86it/s]
+100% 85/85 [00:30<00:00,  3.08it/s]10/01/2021 13:57:37 - INFO - datasets.metric - Removing /root/.cache/huggingface/metrics/rouge/default/default_experiment-1-0.arrow
+                                       
+{'eval_loss': 2.0885379314422607, 'eval_rouge1': 28.2439, 'eval_rouge2': 14.7235, 'eval_rougeL': 23.8184, 'eval_rougeLsum': 24.8937, 'eval_gen_len': 19.0, 'eval_runtime': 31.6347, 'eval_samples_per_second': 10.684, 'eval_steps_per_second': 2.687, 'epoch': 8.86}
+ 88% 3500/4000 [22:20<02:12,  3.78it/s]
+100% 85/85 [00:31<00:00,  3.08it/s]
+                                   [INFO|trainer.py:1987] 2021-10-01 13:57:38,006 >> Saving model checkpoint to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3500
+[INFO|configuration_utils.py:413] 2021-10-01 13:57:38,013 >> Configuration saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3500/config.json
+[INFO|modeling_utils.py:1041] 2021-10-01 13:57:42,633 >> Model weights saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3500/pytorch_model.bin
+[INFO|tokenization_utils_base.py:2033] 2021-10-01 13:57:42,642 >> tokenizer config file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3500/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2039] 2021-10-01 13:57:42,647 >> Special tokens file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3500/special_tokens_map.json
+[INFO|tokenization_t5_fast.py:159] 2021-10-01 13:57:42,849 >> Copy vocab file to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-3500/spiece.model
+{'loss': 0.2189, 'learning_rate': 0.0, 'epoch': 10.13}
+100% 4000/4000 [25:01<00:00,  3.90it/s][INFO|trainer.py:2235] 2021-10-01 14:00:19,118 >> ***** Running Evaluation *****
+[INFO|trainer.py:2237] 2021-10-01 14:00:19,118 >>   Num examples = 338
+[INFO|trainer.py:2240] 2021-10-01 14:00:19,118 >>   Batch size = 4
+
+  0% 0/85 [00:00<?, ?it/s]
+  2% 2/85 [00:00<00:14,  5.85it/s]
+  4% 3/85 [00:00<00:22,  3.68it/s]
+  5% 4/85 [00:01<00:24,  3.25it/s]
+  6% 5/85 [00:01<00:25,  3.17it/s]
+  7% 6/85 [00:01<00:25,  3.06it/s]
+  8% 7/85 [00:02<00:25,  3.01it/s]
+  9% 8/85 [00:02<00:26,  2.92it/s]
+ 11% 9/85 [00:02<00:27,  2.78it/s]
+ 12% 10/85 [00:03<00:26,  2.82it/s]
+ 13% 11/85 [00:03<00:26,  2.82it/s]
+ 14% 12/85 [00:04<00:26,  2.71it/s]
+ 15% 13/85 [00:04<00:27,  2.64it/s]
+ 16% 14/85 [00:04<00:27,  2.55it/s]
+ 18% 15/85 [00:05<00:27,  2.52it/s]
+ 19% 16/85 [00:05<00:26,  2.58it/s]
+ 20% 17/85 [00:06<00:26,  2.55it/s]
+ 21% 18/85 [00:06<00:25,  2.64it/s]
+ 22% 19/85 [00:06<00:24,  2.68it/s]
+ 24% 20/85 [00:07<00:25,  2.60it/s]
+ 25% 21/85 [00:07<00:23,  2.74it/s]
+ 26% 22/85 [00:07<00:22,  2.77it/s]
+ 27% 23/85 [00:08<00:21,  2.85it/s]
+ 28% 24/85 [00:08<00:21,  2.79it/s]
+ 29% 25/85 [00:08<00:21,  2.81it/s]
+ 31% 26/85 [00:09<00:20,  2.91it/s]
+ 32% 27/85 [00:09<00:20,  2.86it/s]
+ 33% 28/85 [00:09<00:19,  2.93it/s]
+ 34% 29/85 [00:10<00:19,  2.91it/s]
+ 35% 30/85 [00:10<00:18,  2.97it/s]
+ 36% 31/85 [00:10<00:19,  2.76it/s]
+ 38% 32/85 [00:11<00:19,  2.77it/s]
+ 39% 33/85 [00:11<00:18,  2.84it/s]
+ 40% 34/85 [00:12<00:18,  2.79it/s]
+ 41% 35/85 [00:12<00:17,  2.90it/s]
+ 42% 36/85 [00:12<00:17,  2.87it/s]
+ 44% 37/85 [00:13<00:16,  2.90it/s]
+ 45% 38/85 [00:13<00:16,  2.90it/s]
+ 46% 39/85 [00:13<00:16,  2.86it/s]
+ 47% 40/85 [00:14<00:16,  2.76it/s]
+ 48% 41/85 [00:14<00:15,  2.80it/s]
+ 49% 42/85 [00:14<00:15,  2.83it/s]
+ 51% 43/85 [00:15<00:14,  2.86it/s]
+ 52% 44/85 [00:15<00:14,  2.83it/s]
+ 53% 45/85 [00:15<00:14,  2.82it/s]
+ 54% 46/85 [00:16<00:13,  2.85it/s]
+ 55% 47/85 [00:16<00:13,  2.77it/s]
+ 56% 48/85 [00:16<00:13,  2.78it/s]
+ 58% 49/85 [00:17<00:12,  2.82it/s]
+ 59% 50/85 [00:17<00:12,  2.69it/s]
+ 60% 51/85 [00:18<00:13,  2.60it/s]
+ 61% 52/85 [00:18<00:12,  2.68it/s]
+ 62% 53/85 [00:18<00:11,  2.76it/s]
+ 64% 54/85 [00:19<00:10,  2.85it/s]
+ 65% 55/85 [00:19<00:10,  2.77it/s]
+ 66% 56/85 [00:19<00:10,  2.68it/s]
+ 67% 57/85 [00:20<00:10,  2.63it/s]
+ 68% 58/85 [00:20<00:10,  2.64it/s]
+ 69% 59/85 [00:21<00:10,  2.50it/s]
+ 71% 60/85 [00:21<00:09,  2.70it/s]
+ 72% 61/85 [00:21<00:08,  2.81it/s]
+ 73% 62/85 [00:22<00:08,  2.87it/s]
+ 74% 63/85 [00:22<00:07,  2.86it/s]
+ 75% 64/85 [00:22<00:07,  2.74it/s]
+ 76% 65/85 [00:23<00:07,  2.67it/s]
+ 78% 66/85 [00:23<00:07,  2.67it/s]
+ 79% 67/85 [00:23<00:06,  2.77it/s]
+ 80% 68/85 [00:24<00:06,  2.73it/s]
+ 81% 69/85 [00:24<00:05,  2.73it/s]
+ 82% 70/85 [00:25<00:05,  2.77it/s]
+ 84% 71/85 [00:25<00:04,  2.83it/s]
+ 85% 72/85 [00:25<00:04,  2.76it/s]
+ 86% 73/85 [00:26<00:04,  2.84it/s]
+ 87% 74/85 [00:26<00:03,  2.86it/s]
+ 88% 75/85 [00:26<00:03,  2.74it/s]
+ 89% 76/85 [00:27<00:03,  2.78it/s]
+ 91% 77/85 [00:27<00:02,  2.88it/s]
+ 92% 78/85 [00:27<00:02,  2.87it/s]
+ 93% 79/85 [00:28<00:02,  2.89it/s]
+ 94% 80/85 [00:28<00:01,  2.92it/s]
+ 95% 81/85 [00:28<00:01,  2.86it/s]
+ 96% 82/85 [00:29<00:01,  2.83it/s]
+ 98% 83/85 [00:29<00:00,  2.84it/s]
+ 99% 84/85 [00:29<00:00,  2.83it/s]
+100% 85/85 [00:30<00:00,  3.06it/s]10/01/2021 14:00:50 - INFO - datasets.metric - Removing /root/.cache/huggingface/metrics/rouge/default/default_experiment-1-0.arrow
+                                       
+{'eval_loss': 2.1357264518737793, 'eval_rouge1': 28.2139, 'eval_rouge2': 14.5226, 'eval_rougeL': 23.9859, 'eval_rougeLsum': 24.9352, 'eval_gen_len': 19.0, 'eval_runtime': 31.5458, 'eval_samples_per_second': 10.715, 'eval_steps_per_second': 2.694, 'epoch': 10.13}
+100% 4000/4000 [25:33<00:00,  3.90it/s]
+100% 85/85 [00:31<00:00,  3.06it/s]
+                                   [INFO|trainer.py:1987] 2021-10-01 14:00:50,669 >> Saving model checkpoint to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-4000
+[INFO|configuration_utils.py:413] 2021-10-01 14:00:50,675 >> Configuration saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-4000/config.json
+[INFO|modeling_utils.py:1041] 2021-10-01 14:00:55,496 >> Model weights saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-4000/pytorch_model.bin
+[INFO|tokenization_utils_base.py:2033] 2021-10-01 14:00:55,501 >> tokenizer config file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-4000/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2039] 2021-10-01 14:00:55,508 >> Special tokens file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-4000/special_tokens_map.json
+[INFO|tokenization_t5_fast.py:159] 2021-10-01 14:00:55,560 >> Copy vocab file to /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-4000/spiece.model
+[INFO|trainer.py:1401] 2021-10-01 14:01:10,374 >> 
+
+Training completed. Do not forget to share your model on huggingface.co/models =)
+
+
+[INFO|trainer.py:1410] 2021-10-01 14:01:10,374 >> Loading best model from /content/drive/MyDrive/summarization/output_T5_base_QFCS/checkpoint-500 (score: 1.5369324684143066).
+{'train_runtime': 1573.569, 'train_samples_per_second': 10.168, 'train_steps_per_second': 2.542, 'train_loss': 0.7160528602600098, 'epoch': 10.13}
+100% 4000/4000 [26:13<00:00,  2.54it/s]
+[INFO|trainer.py:1987] 2021-10-01 14:01:31,735 >> Saving model checkpoint to /content/drive/MyDrive/summarization/output_T5_base_QFCS
+[INFO|configuration_utils.py:413] 2021-10-01 14:01:31,775 >> Configuration saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/config.json
+[INFO|modeling_utils.py:1041] 2021-10-01 14:01:45,648 >> Model weights saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/pytorch_model.bin
+[INFO|tokenization_utils_base.py:2033] 2021-10-01 14:01:45,654 >> tokenizer config file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2039] 2021-10-01 14:01:45,662 >> Special tokens file saved in /content/drive/MyDrive/summarization/output_T5_base_QFCS/special_tokens_map.json
+[INFO|tokenization_t5_fast.py:159] 2021-10-01 14:01:45,724 >> Copy vocab file to /content/drive/MyDrive/summarization/output_T5_base_QFCS/spiece.model
+***** train metrics *****
+  epoch                    =      10.13
+  train_loss               =     0.7161
+  train_runtime            = 0:26:13.56
+  train_samples            =       1577
+  train_samples_per_second =     10.168
+  train_steps_per_second   =      2.542
+10/01/2021 14:01:45 - INFO - __main__ - *** Evaluate ***
+[INFO|trainer.py:2235] 2021-10-01 14:01:45,826 >> ***** Running Evaluation *****
+[INFO|trainer.py:2237] 2021-10-01 14:01:45,826 >>   Num examples = 338
+[INFO|trainer.py:2240] 2021-10-01 14:01:45,826 >>   Batch size = 4
+100% 85/85 [02:21<00:00,  1.52s/it]10/01/2021 14:04:10 - INFO - datasets.metric - Removing /root/.cache/huggingface/metrics/rouge/default/default_experiment-1-0.arrow
+100% 85/85 [02:23<00:00,  1.68s/it]
+***** eval metrics *****
+  epoch                   =      10.13
+  eval_gen_len            =    53.1716
+  eval_loss               =     1.5369
+  eval_rouge1             =    39.1682
+  eval_rouge2             =    20.8799
+  eval_rougeL             =    31.3405
+  eval_rougeLsum          =    33.1648
+  eval_runtime            = 0:02:24.80
+  eval_samples            =        338
+  eval_samples_per_second =      2.334
+  eval_steps_per_second   =      0.587
+10/01/2021 14:04:10 - INFO - __main__ - *** Predict ***
+[INFO|trainer.py:2235] 2021-10-01 14:04:10,694 >> ***** Running Prediction *****
+[INFO|trainer.py:2237] 2021-10-01 14:04:10,694 >>   Num examples = 338
+[INFO|trainer.py:2240] 2021-10-01 14:04:10,695 >>   Batch size = 4
+100% 85/85 [02:10<00:00,  1.15s/it]10/01/2021 14:06:24 - INFO - datasets.metric - Removing /root/.cache/huggingface/metrics/rouge/default/default_experiment-1-0.arrow
+***** predict metrics *****
+  predict_gen_len            =    53.9556
+  predict_loss               =     1.5193
+  predict_rouge1             =    42.4914
+  predict_rouge2             =    23.7815
+  predict_rougeL             =    34.8164
+  predict_rougeLsum          =    36.6028
+  predict_runtime            = 0:02:13.74
+  predict_samples            =        338
+  predict_samples_per_second =      2.527
+  predict_steps_per_second   =      0.636
+[INFO|modelcard.py:446] 2021-10-01 14:06:25,294 >> Dropping the following result as it does not have all the necessary field:
+{'task': {'name': 'Summarization', 'type': 'summarization'}, 'metrics': [{'name': 'Rouge1', 'type': 'rouge', 'value': 39.1682}]}
+100% 85/85 [02:12<00:00,  1.56s/it]
