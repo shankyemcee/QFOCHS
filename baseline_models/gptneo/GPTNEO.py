@@ -25,7 +25,8 @@ import time
 from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
 
-device = torch.device('cuda')
+device = torch.device('cpu')
+torch.cuda.empty_cache()
 
 def set_seed(args):
     np.random.seed(args.seed)
@@ -66,7 +67,7 @@ if __name__ == '__main__':
                         help="whether to train or test the model")
     # parser.add_argument('--do_test_challenge', default=False, action="store_true", 
     #                     help="whether to train or test the model")
-    parser.add_argument('--transfer_learn', default=True, action="store_true", 
+    parser.add_argument('--transfer_learn', default=False, action="store_true", 
                         help="transfer learn a new layer for the task")
     parser.add_argument('--tl_learning_rate', default=2e-4, type=float, 
                         help="transfer learn learning rate")
@@ -82,7 +83,7 @@ if __name__ == '__main__':
     parser.add_argument('--load_bboxes_from', default='data/bboxes/', type=str, help="load bboxes path")
     parser.add_argument('--load_charts_from', default='data/chart_images/', type=str, help="load charts path")
     parser.add_argument('--id', default='checkpoints', type=str, help="specify the id of the experiment")
-    # parser.add_argument('--max_len', default=800, type=int, help="whether to train or test the model")
+    parser.add_argument('--max_len', default=500, type=int, help="max seq length model can take is 2048")
     # parser.add_argument('--stage', default=1, type=int, help="whether to train or test the model")
     # parser.add_argument("--modelpath", type=str, default="bert-base-uncased",
     #                     help="For distributed training: local_rank")
@@ -90,7 +91,7 @@ if __name__ == '__main__':
     parser.add_argument('--decode_first_K', type=int, default=10000, help="For debugging purpose")    
     args = parser.parse_args()
 
-    args.device = torch.device("cuda")
+    args.device = torch.device("cpu")
     args.n_gpu = torch.cuda.device_count()
     # start_epoch = args.start_epoch
     # if args.model == 'gpt2-medium':
@@ -105,14 +106,19 @@ if __name__ == '__main__':
     
     if args.transfer_learn == True:
         ext_model = ChartLayerModule(model)
-    
+        print("transferring model to selected device: ",args.device)
+        ext_model = nn.DataParallel(ext_model)
+        ext_model.to(args.device)
+    else:
+        print("transferring model to selected device: ",args.device)
+        # model = nn.DataParallel(model)
+        # model.to(args.device)
     # tokenizer.add_tokens(['[ENT]', '[SEP]'])
 
     # model = GPT2LMHeadModel.from_pretrained(args.model)
     # model.resize_token_embeddings(len(tokenizer))
     
-    # model = nn.DataParallel(model)
-    # model.to(args.device)
+    
     chart_dim = 2560 #temp till krl of charts are available
     
     if not os.path.exists(args.id):
@@ -149,10 +155,10 @@ if __name__ == '__main__':
                         print("start transfer learning {}th epoch".format(epoch_idx))
                         for idx in range(0, dataset.train_len()):
                             batch = dataset.get_train_data(idx)
-                            # batch = tuple(Variable(t).to(device) for t in batch)
-                            batch = tuple(t for t in batch)
+                            batch = tuple(Variable(t).to(device) for t in batch)
                             decoder_inputs, decoder_outputs, masks, encoder_input = batch
                             inputs = torch.cat([encoder_input, decoder_inputs], 1)
+                            inputs = inputs[:,:args.max_len]
             
                             model.zero_grad()
                             optimizer.zero_grad()
@@ -205,10 +211,10 @@ if __name__ == '__main__':
             print("start fine tuning {}th epoch".format(epoch_idx))
             for idx in range(0, dataset.train_len()):
                 batch = dataset.get_train_data(idx)
-                # batch = tuple(Variable(t).to(device) for t in batch)
-                batch = tuple(t for t in batch)
+                batch = tuple(Variable(t).to(device) for t in batch)
                 decoder_inputs, decoder_outputs, masks, encoder_input = batch
                 inputs = torch.cat([encoder_input, decoder_inputs], 1)
+                inputs = inputs[:,:args.max_len]
 
                 model.zero_grad()
                 optimizer.zero_grad()
@@ -274,7 +280,7 @@ if __name__ == '__main__':
 
     if args.do_test:
         # assert 'stage2' in args.load_from, "The testing can only be done with stage2 model"
-        dataset = GPTNeoLoadData(None, None, 'data/test.json',tokenizer, args.batch_size)
+        dataset = GPTNeoLoadData(None, None, 'data/test.json',tokenizer, args.chart_load_format, args.load_bboxes_from, args.batch_size)
         if args.transfer_learn == True:
             ext_model.load_state_dict(torch.load(args.load_from))
             chosen_model = ext_model
@@ -302,27 +308,27 @@ if __name__ == '__main__':
 
                 batch = tuple(Variable(t).to(device) for t in batch)
                 decoder_inputs, decoder_outputs, masks, encoder_input = batch
-                
+                encoder_input = encoder_input[:,:args.max_len]
                 
                 
                 
                 if args.chart_load_format == 'krl':
-                    chart_embeddings = dataset.extract_krl(*list(inputs.shape),chart_dim) #temp chart embeddings
+                    chart_embeddings = dataset.extract_krl(*list(encoder_input.shape),chart_dim) #temp chart embeddings
                     if args.transfer_learn == True:
                         input_embeddings = chosen_model.base_model.transformer.wte(encoder_input)
                         fake_inputs = torch.cat([chart_embeddings,input_embeddings], 1)
                         # logits = ext_model(inputs_embeds = torch.cat([chart_embeddings,input_embeddings], 1))
                     else:
-                        input_embeddings = chosen_model.transformer.wte(inputs)
+                        input_embeddings = chosen_model.transformer.wte(encoder_input)
                         fake_inputs = torch.cat([chart_embeddings,input_embeddings], 1)
                         # logits = model(inputs_embeds = torch.cat([chart_embeddings,input_embeddings], 1))[0]
                 else:
                     if args.transfer_learn == True:
-                        input_embeddings = chosen_model.base_model.transformer.wte(inputs)
+                        input_embeddings = chosen_model.base_model.transformer.wte(encoder_input)
                         fake_inputs = input_embeddings
                         # logits = ext_model(inputs_embeds = input_embeddings)
                     else:
-                        fake_inputs = inputs
+                        fake_inputs = encoder_input
                         # logits = model(inputs)[0]
                 
                 
@@ -333,7 +339,7 @@ if __name__ == '__main__':
                 
                 # fake_inputs = encoder_input
 
-                samples = sample_sequence(chosen_model, 50, fake_inputs, args.transfer_learn, args.chart_load_format, stop_token=tokenizer.eos_token_id, 
+                samples = sample_sequence(chosen_model, 100, fake_inputs, args.transfer_learn, args.chart_load_format, stop_token=tokenizer.eos_token_id, 
                                           top_k=1, trigger=None, 
                                           supress=None,
                                           repetition=None)

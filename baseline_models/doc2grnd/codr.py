@@ -138,15 +138,15 @@ class MultiBartQA:
                             default = './pytorch_model.bin',
                             help = 'Model file')
         parser.add_argument("--source_max_len",
-                            default=1024,
+                            default=512,
                             type=int,
                             help="Max len of source")
         parser.add_argument("--target_max_len",
-                            default=128,
+                            default=100,
                             type=int,
                             help="Max len of target")
         parser.add_argument("--train_batch_size",
-                            default=4,
+                            default=6,
                             type=int,
                             help="Total batch size for training.")
         parser.add_argument("--validation_timing",
@@ -162,7 +162,7 @@ class MultiBartQA:
                             type=float,
                             help="The initial learning rate for Adam.")
         parser.add_argument("--num_train_epochs",
-                            default=25.0,
+                            default=5.0,
                             type=float,
                             help="Total number of training epochs to perform.")
         parser.add_argument("--warmup_proportion",
@@ -173,7 +173,7 @@ class MultiBartQA:
         parser.add_argument("--adam_epsilon", default=1e-8, type=float, help="Epsilon for Adam optimizer.")
         parser.add_argument('--gradient_accumulation_steps',
                             type=int,
-                            default=4,
+                            default=3,
                             help="Number of updates steps to accumulate before performing a backward/update pass.")
         parser.add_argument('--max_grad_norm', help='gradient clipping for Max gradient norm.', required=False, default=1.0,
                             type=float)
@@ -207,22 +207,23 @@ class MultiBartQA:
     def load_examples(self, data_dir, filename):
         examples = []
         
-        train = self.load_json(data_dir+filename)
+        data = self.load_json(data_dir+filename)
         
-        for row in train:
-            guid = train[row][0]   #image no
+        for row in data:
+            guid = data[row][0]   #image no
              
         
             if self.args.chart_load_format == 'bbox':
-                bbox_file = train[row][0].replace('.png','.json')
+                bbox_file = data[row][0].replace('.png','.json')
                 bbox = self.load_json(self.args.load_bboxes_from+bbox_file)
-                source = " | ".join([str(i['sentence'])+"- "+str(i['bounding_box']) for i in bbox]) #bbox as source
+                #source = " | ".join([str(i['sentence'])+"- "+str(i['bounding_box']) for i in bbox]) #bbox as source
+                source = " | ".join([str(i['sentence']) for i in bbox]) + " | " + data[row][2]
             else:   #else it is krl
-                source = train[row][2] #summary as source 
+                source = data[row][2] #summary as source 
         
         
-            target = train[row][4] #abstractive_answer
-            context = train[row][3] + train[row][1]    #question+title
+            target = data[row][4] #abstractive_answer
+            context = data[row][3] + data[row][1]    #question+title
         
         
         # with codecs.open(data_dir + filename, 'r', 'utf-8') as inp:
@@ -234,7 +235,7 @@ class MultiBartQA:
                 # context = row[3]
             examples.append(GenerationInputExample(
                 guid=guid, 
-                source=source, 
+                source=source[:self.args.source_max_len], 
                 target=target,
                 context=context
             ))
@@ -253,7 +254,7 @@ class MultiBartQA:
             source_mask = []
             source_maskk = []
             source_len = 0
-
+# if we refer to paper, this implementation requires source to be context and context to be documents
             source = 'chat: ' + e.source
 
             source_tokens = self.tokenizer.tokenize(source)[:self.args.source_max_len-2]
@@ -552,7 +553,7 @@ class MultiBartQA:
                         sys.stdout.flush()
                         curr_loss, curr_total_words = 0, 0
                 
-                if (step+1) % 20000 == 0:
+                if (step+1) % 4000 == 0:
                     self.save(num_updates)
 
                 if (step + 1) % self.args.gradient_accumulation_steps == 0:
@@ -574,7 +575,7 @@ class MultiBartQA:
                             f_log.write('\n')
                             f_log.flush()
                         self.save(num_updates)
-
+        self.save(num_updates)
         if f_log is not None:
             f_log.close()
 

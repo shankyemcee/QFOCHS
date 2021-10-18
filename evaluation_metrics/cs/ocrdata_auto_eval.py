@@ -10,10 +10,10 @@ import re
 
 
 
-titlePath='pew/c2t_data/testTitle.txt'
-dataPath='pew/c2t_data/testData.txt'
-goldPath = 'pew/c2t_data/testOriginalSummary.txt'
-generatedPath = 'pew/c2t_data/generated-p80.txt'
+titlePath='pew/bertqa_data/testTitles.txt'
+dataPath='pew/bertqa_data/testData.txt'
+goldPath = 'pew/bertqa_data/targetAnswers.txt'
+generatedPath = 'pew/bertqa_data/generatedAnswers.txt'
 
 
 fillers = ['in', 'the', 'and', 'or', 'an', 'as', 'can', 'be', 'a', ':', '-',
@@ -28,7 +28,7 @@ untemplatedScores = [1,1]
 
 
 
-with open(generatedPath) as generatedFile:
+with open(generatedPath, encoding='utf-8') as generatedFile:
     gen_file = generatedFile.readlines()
     
     

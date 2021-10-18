@@ -105,7 +105,8 @@ class GPTNeoLoadData(Dataloader):
         if load_format == 'bbox':
             bbox_file = e[0].replace('.png','.json')
             bbox = self.load_json(self.bbox_path+bbox_file)
-            tokenizer_input = " | ".join([str(i['sentence'])+"- "+str(i['bounding_box']) for i in bbox])
+            #tokenizer_input = " | ".join([str(i['sentence'])+"- "+str(i['bounding_box']) for i in bbox])
+            tokenizer_input = " | ".join([str(i['sentence']) for i in bbox])
             return self.tokenizer.encode(tokenizer_input , add_special_tokens=False)
         else:   #else it is krl, for which embeddings are added to embedded inputs
             return []
@@ -150,7 +151,7 @@ class GPTNeoLoadData(Dataloader):
 
             # tmp_prefix = self.tokenizer.tokenize('Given the table title of "{}" . '.format(e[2]))
 
-            encoder_input.append(chart_encoding + question_encoding + title_encoding)
+            encoder_input.append(question_encoding + title_encoding + chart_encoding)
 
 # make all rows same length for tensor creation
         length = max([len(_) for _ in seqs]) + 1
@@ -197,7 +198,7 @@ class GPTNeoLoadData(Dataloader):
             question_encoding = self.tokenizer.encode(e[3] , add_special_tokens=False)
             title_encoding = self.tokenizer.encode(e[1] , add_special_tokens=False)
             # chart_encoding = self.tokenizer.encode(e[3] , add_special_tokens=False)
-            chart_encoding=[]
+            chart_encoding=self.load_charts(self.load_format,e)
             answer_encoding = self.tokenizer.encode(e[4] , add_special_tokens=False)
             seqs.append(answer_encoding)
             seq_masks.append([1] * len(answer_encoding))

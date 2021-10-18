@@ -6,3 +6,6 @@ baseline_models/gptneo/data/bboxes/*
 baseline_models/bertqa/pytorch_pretrained_bert/__pycache__/*
 baseline_models/gptneo/__pycache__/*
 baseline_models/doc2grnd/__pycache__/*
+baseline_models/bertqa/__pycache__/*
+baseline_models/bertqa/output/__pycache__/*
+evaluation_metrics/squad_eval/__pycache__/*
