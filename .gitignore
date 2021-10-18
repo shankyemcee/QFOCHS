@@ -1,3 +1,4 @@
+**/__pycache__/
 c2t_model/run1_backup/*
 c2t_model/periodic-80.pth
 data_stories_gpt2/model_checkpoints/*
