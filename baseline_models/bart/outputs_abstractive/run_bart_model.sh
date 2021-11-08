@@ -24,4 +24,4 @@ python3 -m torch.distributed.run \
     --evaluation_strategy steps \
     --load_best_model_at_end \
     --weight_decay=0.01 \
-    --max_steps=5000 \
+    --max_steps=10000 \
