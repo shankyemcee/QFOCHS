@@ -97,9 +97,19 @@ mturk_charts/no_data_remaining/two_col/598.png
 
 mturk_charts/no_data_remaining/two_col/620.png
 
+mturk_charts/no_data_remaining/multi_col/160.png
 
+mturk_charts/no_data/multi_col/7471.png
 
+mturk_charts/no_data/multi_col/7676.png
 
+mturk_charts/no_data/multi_col/7763.png
+
+mturk_charts/no_data/multi_col/8240.png
+
+mturk_charts/no_data/multi_col/8362.png
+
+mturk_charts/no_data/multi_col/8646.png
 
 
 

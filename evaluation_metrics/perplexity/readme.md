@@ -23,4 +23,7 @@
        --validation_file YOUR_GENERATED_OUTPUTS \
        --do_eval \
        --output_dir YOUR_OUTPUT_FILE \
+	   
+	   
+	python run_clm.py  --model_name_or_path gpt2-medium --train_file pew/bertqa_data/generatedAnswers.txt   --validation_file pew/bertqa_data/generatedAnswers.txt  --do_eval    --output_dir pew/bertqa/targetAnswers.txt 
    ```

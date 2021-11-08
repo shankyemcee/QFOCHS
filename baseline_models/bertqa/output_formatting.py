@@ -6,10 +6,10 @@ import json
 
 
 gold_path = "data/test.json"
-predict_path = "output/test2/predictions.json"
+predict_path = "output/test3/predictions.json"
 
-target_gold_path = "output/test2/targetAnswers.txt"
-target_predict_path = "output/test2/generatedAnswers.txt"
+target_gold_path = "output/test3/targetAnswers.txt"
+target_predict_path = "output/test3/generatedAnswers.txt"
 
 target_gold = []
 target_predict = []

@@ -5,13 +5,13 @@
 import pandas as pd
 import re
 
+#original files
+file1 = "edited_answers/user_split_remaining/Tiffany/pair1/output_27.csv"
+file2 = "edited_answers/user_split_remaining/Tiffany/pair1/output_28.csv"
 
-file1 = "edited_answers/user_split/Tiffany/output_7.csv"
-file2 = "edited_answers/user_split/Tiffany/output_8.csv"
+output_dir = "disagreements_resolved/combined_final/batch_27.csv"
 
-output_dir = "disagreements_resolved/combined2/batch_7.csv"
-
-file_resolved_batches = ["disagreements_resolved/manually/Tiffany/batch_7.csv"
+file_resolved_batches = ["disagreements_resolved/manually_remaining/Tiffany/pair1/batch_27(0-99).csv"
                            ]
 
 df1 = pd.read_csv(file1,encoding='utf8')
@@ -67,7 +67,8 @@ for file in file_resolved_batches:
     df_resolved = pd.read_csv(file,encoding='utf8')
     for index, row in df_resolved.iterrows():
         title, original_answer = find_extra_info(row['img_path'],row['answer_resolution'],row['extractive_answer'])
-        combined_output.loc[-1] = pd.concat([row, pd.Series([title,original_answer],index=['title','original_answer'])], axis=0)
+        # combined_output.loc[-1] = pd.concat([row, pd.Series([title,original_answer],index=['title','original_answer'])], axis=0)
+        combined_output.loc[-1] = row       #if title and original_answer is available in the csv
         combined_output.index = combined_output.index + 1
         combined_output = combined_output.sort_index()
 
