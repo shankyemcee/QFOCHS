@@ -4,7 +4,14 @@
 	- Abstractive summarisation
 	- Extractive summarisation
 
-## How to Run
+## How to Generate the Inputs
+1. Download the dataset from https://drive.google.com/file/d/11nsA5km-8l03S5UoBmgU3D0Lc0zFcrrT/view?usp=sharing
+2. Copy the `inputs/` folder into the dataset folder
+3. `cd inputs/`
+4. `python preprocessing.py`
+	1. You can modify this file to change how the inputs are formatted
+
+## How to Run Models
 ### Setup
 1. `git clone https://github.com/huggingface/transformers`
 2. `cd transformers`
@@ -12,8 +19,15 @@
 4. `pip install -r examples/pytorch/summarization/requirements.txt`
 5. `cd ..`
 
-### Abstractive Summarisation
-1. `sh ./outputs_abstractive/run_bart_model.sh`
+### Running the Models
+```bash
+# Abstractive
+summary=abstractive model=abstractive_ocr sh run_bart_model.sh
+summary=abstractive model=abstractive_ocr_title sh run_bart_model.sh
+summary=abstractive model=abstractive_ocr_title_bboxes sh run_bart_model.sh
 
-### Extractive Summarisation
-1. `sh ./outputs_extractive/run_bart_model.sh`
+# Extractive
+summary=extractive model=extractive_ocr sh run_bart_model.sh
+summary=extractive model=extractive_ocr_title sh run_bart_model.sh
+summary=extractive model=extractive_ocr_title_bboxes sh run_bart_model.sh
+```
