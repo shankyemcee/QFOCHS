@@ -11,6 +11,18 @@
 4. `python preprocessing.py`
 	1. You can modify this file to change how the inputs are formatted
 
+### Generating Token Statistics
+1. `cd inputs/`
+2. `python token_stats.py`
+	1. For reference to set the input & output sequence length
+	2. Generates the `inputs/token_stats.csv`
+
+### Input Format
+- Overall Format: `question <s> title <s> ocr <s> summary`
+	- `title` & `summary` may be excluding depending on the set-up
+- OCR Format: `ocr_text [a, b, c, d]`
+	- `[a, b, c, d]` is omitted if no bounding boxes
+
 ## How to Run Models
 ### Setup
 1. `git clone https://github.com/huggingface/transformers`

@@ -34,7 +34,7 @@ def get_ocr(bboxes, include_bboxes=True):
 	items = json.loads(bboxes)
 
 	if include_bboxes:
-		sentences = [f"{item['sentence']} {item['bounding_box']} " for item in items]
+		sentences = [f"{item['sentence'].strip()} {item['bounding_box']} " for item in items]
 	else:
 		sentences = [item["sentence"] for item in items]
 	
@@ -62,18 +62,9 @@ def get_text(row, include_question=True, include_title=False, include_ocr=True, 
 
 	return " <s> ".join(text_elements)
 
-TEXT_COLUMNS = [
-	"abstractive_ocr_text",
-	"abstractive_ocr_title_text",
-	"abstractive_ocr_title_bboxes_text",
-	"extractive_ocr_text",
-	"extractive_ocr_title_text",
-	"extractive_ocr_title_bboxes_text",
-]
 
 for title, df in dfs.items():
 	df.index.rename("id", inplace=True)
-	# df = df[:1]
 
 	df["bboxes"] = df["image_no"].apply(get_bboxes)
 
@@ -84,7 +75,5 @@ for title, df in dfs.items():
 	df["extractive_ocr_text"] = df.apply(lambda row: get_text(row, include_summary=True), axis=1)
 	df["extractive_ocr_title_text"] = df.apply(lambda row: get_text(row, include_summary=True, include_title=True), axis=1)
 	df["extractive_ocr_title_bboxes_text"] = df.apply(lambda row: get_text(row, include_summary=True, include_title=True, include_bboxes=True), axis=1)
-
-	# print("\n\n".join(map(str, dict(df.iloc[0][TEXT_COLUMNS]).items())))
 
 	df.to_csv(f"{title}.csv")
