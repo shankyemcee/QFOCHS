@@ -8,14 +8,14 @@ import json
 # gold_path = "data/test.json"
 # predict_path = "output/test2/predictions.json"
 
-target_path = "pew/bertqa_data/data.json"
+target_path = "pew/bertqa_data/data.json" #generated summaries
 
 
 target = {}
 target['data']=[]
 
 
-split = "test"
+split = "test" #target summaries
 dataset = json.load(open('pew/bertqa_data/%s.json' % split, 'r'))
 
 

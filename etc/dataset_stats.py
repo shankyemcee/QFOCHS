@@ -25,9 +25,9 @@ for file in os.listdir(unprocessed_dir):
     good_count+=batch[batch.category == 'good'].shape[0]
     unquestionable_count+=batch[batch.category == 'unquestionable'].shape[0]
 
-print('good',good_count)
+print('good',good_count-76) #76 samples manually removed in analysis stage
 print('too complex',complex_count)
-print('cannot create open ended question',unquestionable_count)
+print('cannot create open ended question',unquestionable_count+76) #76 samples manually removed in analysis stage
 print('total',good_count+complex_count+unquestionable_count)
 #######
 
@@ -37,7 +37,7 @@ print('total',good_count+complex_count+unquestionable_count)
 
 #total,average number of tokens in summary,abstractive,extractive,question,title
 #######
-all_annotations = pd.read_csv("../../all_annotations.csv")
+all_annotations = pd.read_csv("all_annotations.csv")
 size = all_annotations.shape[0]
 col_list=['summary','abstractive_answer','extractive_answer','question','title']
 

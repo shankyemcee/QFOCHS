@@ -3,7 +3,7 @@
 import json
 
 
-test_file = "test.json"
+test_file = "../../data/test.json"
 
 
 target_title_file = "testTitles.txt"
@@ -17,7 +17,7 @@ with open(test_file, 'r') as f:
 
 for key in test:
     titles.append(test[key][1])
-    with open("../bboxes/"+test[key][0].replace(".png",".json"), 'r') as f:
+    with open("../../bboxes/"+test[key][0].replace(".png",".json"), 'r') as f:
                 bbox = json.load(f)
                 
     data.append(" | ".join([row['sentence'].replace(" ","_") for row in bbox]))
