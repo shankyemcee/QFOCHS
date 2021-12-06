@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+		integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ=="
+		crossorigin="anonymous" />
+	<style>
+		.chart-img {
+			max-width: 100%;
+			max-height: 500px;
+			background-color: white;
+		}
+
+		.radio.checkbox label {
+			cursor: pointer;
+		}
+
+		.data-table {
+			overflow-x: scroll;
+			overflow-y: scroll;
+			max-height: 400px;
+		}
+	</style>
+	<title>Model Evaluation</title>
+</head>
+
+<body>
+	<div class="ui container">
+		<div class="ui modal" id="instructions-modal">
+			<i class="close icon"></i>
+			<div class="header">
+				Instructions
+			</div>
+			<div class="scrolling content">
+				<div>
+					<h3>Steps</h3>
+					<ol class="ui list">
+						<li>Input your starting chart number in the "Chart No." field at the top.</li>
+						<li>For each chart, fill up the form and click "Submit"</li>
+						<li>At the end of a session, click "Save Progress" and save your output file.</li>
+						<li>Before beginning your next session, click "Load Progress" and upload your output file from
+							the previous session.</li>
+						<li>Repeat steps 2-4 until you have annotated all your charts.</li>
+					</ol>
+					<h3>Compare the quality of summaries for a chart</h3>
+					<p>
+						Given a chart, its title, its question and two answer, identify which answer is more factual, coherent and fluent.
+					</p>
+					<h3>
+						Definitions
+					</h3>
+					<table class="ui definition table">
+						<tbody>
+							<tr>
+								<td>Factual Correctness</td>
+								<td>How accurate the summary is. A factually correct summary should only contain information (e.g. numbers, events, entities) that is true and/or supported by the chart.</td>
+							</tr>
+							<tr>
+								<td>Coherence</td>
+								<td>Whether the summary's sentences are related and logically follow each other. A coherent summary should have a logical flow between sentences.</td>
+							</tr>
+							<tr>
+								<td>Fluency</td>
+								<td>How grammatically correct the summary is. A fluent summary should contain no grammatical errors and sound natural to a native English speaker.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="ui hidden divider"></div>
+		<h1>Model Evaluation</h1>
+		<div>
+			<button class="ui black button" id="instructions-btn"><i class="icon eye"></i>View Instructions</button>
+			<span>
+				<input type="file" id="upload-input" style="display: none;" />
+				<label for="upload-input" class="ui blue button">
+					<i class="icon upload"></i> Load Progress
+				</label>
+			</span>
+			<a class="ui green button" id="download-btn"><i class="icon download"></i> Save Progress</a>
+			<a id="real-download-btn" style="display: none;" download="output.csv">Download</a>
+			<div class="ui labeled input">
+				<div class="ui basic label">Chart No.</div>
+				<input type="number" id="chart-num" min="0" value="0">
+			</div>
+		</div>
+		<div class="ui hidden divider"></div>
+		<div class="ui stackable grid">
+			<div class="sixteen wide tablet eight six wide computer column">
+				<div>
+					<div class="chart">
+						<h2>Chart</h2>
+						<p><strong>Title:</strong> <span id="chart-title"></span></p>
+						<p><strong>Question:</strong> <span id="chart-question"></span></p>
+						<img class="chart-img" id="chart-img" src=""></img>
+					</div>
+				</div>
+			</div>
+			<div class="sixteen wide tablet ten wide computer column">
+				<div>
+					<h2>Answers</h2>
+					<div id="summaries-div">
+						<h3>Answer #1</h3>
+						<div class="ui segment">
+							More than three-quarters of Hispanic ( 63 % ) and white ( 76 % ) adults said they feel the
+							need to stay tuned in to COVID-19 news. Black adults were far more likely than white adults to
+							say
+							this ( 39 % vs. 23 % ).
+						</div>
+						<h3>Answer #2</h3>
+						<div class="ui segment">
+							Blacks and Hispanics are especially more to view said harassment as a pressing issue . For
+							instance, larger shares of blacks ( 74 % ) and Hispanics ( 72 % ) than whites ( 57 % )
+							consider said harassment to be a `` major problem . '' Blacks are also Americans more to tuned it is
+							Americans important for news to Hispanic white and news said than to be news to Hispanic
+							their news ( 36 % vs. 63 % ) .
+						</div>
+					</div>
+				</div>
+				<div class="ui hidden divider"></div>
+				<div>
+					<h2>Evaluation Questions</h2>
+					<p>For the provided chart and summaries, please answer the following questions. Please use the "No
+						difference" option sparingly, and only if there is absolutely no difference between the texts.
+					</p>
+					<div class="ui hidden divider"></div>
+					<form class="ui form">
+						<table class="ui definition compact table">
+							<tbody>
+								<tr>
+									<td>
+										<strong>Which summary is more factually correct (facts mentioned are supported by the chart)?</strong>
+									</td>
+									<td>
+										<div class="ui radio checkbox">
+											<input type="radio" name="factual" id="factual-1" value="factual-1"
+												required>
+											<label for="factual-1">Summary&nbsp;#1</label>
+										</div>
+									</td>
+									<td>
+										<div class="ui radio checkbox">
+											<input type="radio" name="factual" id="factual-2" value="factual-2"
+												required>
+											<label for="factual-2">Summary&nbsp;#2</label>
+										</div>
+									</td>
+									<td>
+										<div class="ui radio checkbox">
+											<input type="radio" name="factual" id="factual-0" value="factual-0"
+												required>
+											<label for="factual-0">No&nbsp;difference</label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<strong>Which summary is more coherent (good connections between
+											sentences)?</strong>
+									</td>
+									<td>
+										<div class="ui radio checkbox">
+											<input type="radio" name="coherent" id="coherent-1" value="coherent-1"
+												required>
+											<label for="coherent-1">Summary&nbsp;#1</label>
+										</div>
+									</td>
+									<td>
+										<div class="ui radio checkbox">
+											<input type="radio" name="coherent" id="coherent-2" value="coherent-2"
+												required>
+											<label for="coherent-2">Summary&nbsp;#2</label>
+										</div>
+									</td>
+									<td>
+										<div class="ui radio checkbox">
+											<input type="radio" name="coherent" id="coherent-0" value="coherent-0"
+												required>
+											<label for="coherent-0">No&nbsp;difference</label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<strong>Which summary is more fluent/grammatical correct?</strong>
+									</td>
+									<td>
+										<div class="ui radio checkbox">
+											<input type="radio" name="fluent" id="fluent-1" value="fluent-1" required>
+											<label for="fluent-1">Summary&nbsp;#1</label>
+										</div>
+									</td>
+									<td>
+										<div class="ui radio checkbox">
+											<input type="radio" name="fluent" id="fluent-2" value="fluent-2" required>
+											<label for="fluent-2">Summary&nbsp;#2</label>
+										</div>
+									</td>
+									<td>
+										<div class="ui radio checkbox">
+											<input type="radio" name="fluent" id="fluent-0" value="fluent-0" required>
+											<label for="fluent-0">No&nbsp;difference</label>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="ui hidden divider"></div>
+						<button class="ui black button" type="submit"><i class="icon send"></i> Submit</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="ui hidden divider"></div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+		integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+		integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw=="
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.7.0/d3.min.js"
+		integrity="sha512-cd6CHE+XWDQ33ElJqsi0MdNte3S+bQY819f7p3NUHgwQQLXSKjE4cPZTeGNI+vaxZynk1wVU3hoHmow3m089wA=="
+		crossorigin="anonymous"></script>
+	<script src="js/app.js"></script>
+</body>
+
+</html>
