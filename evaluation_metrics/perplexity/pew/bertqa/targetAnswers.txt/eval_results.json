@@ -1,8 +1,8 @@
 {
-    "eval_loss": 2.8566932678222656,
-    "eval_runtime": 622.3981,
-    "eval_samples": 66,
-    "eval_samples_per_second": 0.106,
-    "eval_steps_per_second": 0.014,
-    "perplexity": 17.40388170478456
+    "eval_loss": 0.9025440216064453,
+    "eval_runtime": 382.915,
+    "eval_samples": 80,
+    "eval_samples_per_second": 0.209,
+    "eval_steps_per_second": 0.026,
+    "perplexity": 2.4658683607010365
 }

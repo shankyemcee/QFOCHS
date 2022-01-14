@@ -10,10 +10,10 @@ import re
 
 
 
-titlePath='pew/gpt2_data/testTitles.txt'
-dataPath='pew/gpt2_data/testData.txt'
-goldPath = 'pew/gpt2_data/targetAnswers.txt'
-generatedPath = 'pew/gpt2_data/generatedAnswers.txt'
+titlePath='pew/doc2grnd_data/testTitles.txt'
+dataPath='pew/doc2grnd_data/testData.txt'
+goldPath = 'pew/doc2grnd_data/test_reference.txt'
+generatedPath = 'pew/doc2grnd_data/test_predictions.txt'
 
 
 fillers = ['in', 'the', 'and', 'or', 'an', 'as', 'can', 'be', 'a', ':', '-',
