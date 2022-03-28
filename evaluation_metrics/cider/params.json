@@ -1,5 +1,5 @@
 {
-	"pathToData" : "data/pew/gpt2_data/",
+	"pathToData" : "data/pew/bart_data/",
 	"refName" : "targetAnswers.json",
 	"candName" : "generatedAnswers.json",
 	"resultFile" : "results.json",

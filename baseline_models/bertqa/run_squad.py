@@ -101,8 +101,8 @@ class InputFeatures(object):
 def find_start_n_end_index(orig_answer_text,paragraph_text):
     answer_list = orig_answer_text.split(" ")
     max_match = 4
-    start = -1
-    end_index = -1
+    start_index = 0
+    end_index = 1
     for i in range(max_match,0,-1):
         if paragraph_text.find(" ".join(answer_list[:i])) != -1:
             start_index = paragraph_text.find(" ".join(answer_list[:i]))
@@ -110,9 +110,9 @@ def find_start_n_end_index(orig_answer_text,paragraph_text):
             
     for i in range(max_match,0,-1):
         if paragraph_text.rfind(" ".join(answer_list[-i:])) != -1:
-            end_index = paragraph_text.rfind(" ".join(answer_list[-i:]))
+            end_index = paragraph_text.rfind(" ".join(answer_list[-i:])) + len(" ".join(answer_list[-i:]))
             break;    
-            
+    #print(orig_answer_text,paragraph_text)    
     return start_index, end_index
 
 
@@ -142,6 +142,10 @@ def read_examples(args, input_file, is_training, version_2_with_negative):
     for entry in input_data:
         # for paragraph in entry["paragraphs"]:
             paragraph_text = input_data[entry][2]
+            answer = input_data[entry][6]
+            if is_training:
+                start_index, end_index = find_start_n_end_index(answer,paragraph_text)
+            paragraph_text = paragraph_text[max(0,start_index):end_index]
             doc_tokens = []
             char_to_word_offset = []
             prev_is_whitespace = True
@@ -158,7 +162,7 @@ def read_examples(args, input_file, is_training, version_2_with_negative):
 
             # for qa in paragraph["qas"]:
             qas_id = input_data[entry][0].replace(".png","")
-            question_text = input_data[entry][3]
+            question_text = input_data[entry][4]
             start_position = None
             end_position = None
             orig_answer_text = None
@@ -170,7 +174,7 @@ def read_examples(args, input_file, is_training, version_2_with_negative):
                 #     raise ValueError(
                 #         "For training, each question should have exactly 1 answer.")
                 # if not is_impossible:
-                    answer = input_data[entry][5]
+                    
                     orig_answer_text = answer
                     start_index, end_index = find_start_n_end_index(orig_answer_text,paragraph_text)
                     # answer_length = len(orig_answer_text)
@@ -199,7 +203,8 @@ def read_examples(args, input_file, is_training, version_2_with_negative):
             if args.chart_load_format == 'bbox':
                 bbox_file = input_data[entry][0].replace('.png','.json')
                 bbox = load_json(args.load_bboxes_from+bbox_file)
-                chart_embedding = " | ".join([str(i['sentence'])+"- "+str(i['bounding_box']) for i in bbox]) #bbox as source
+                chart_embedding = " . ".join([str(i['sentence']) +" - "+str(i['bounding_box']) for i in bbox]) #bbox as source
+                #chart_embedding = " . ".join([str(i['sentence']) for i in bbox])
             else:   #else it is krl
                 chart_embedding = [] #summary as source 
             
@@ -213,7 +218,7 @@ def read_examples(args, input_file, is_training, version_2_with_negative):
             
             example = SquadExample(
                 qas_id=qas_id,
-                question_text= question_text + " [SEP] " + title + " [SEP] " + chart_embedding,
+                question_text=  question_text +  title + chart_embedding,
                 doc_tokens=doc_tokens,
                 orig_answer_text=orig_answer_text,
                 start_position=start_position,
@@ -893,7 +898,7 @@ def main():
                         help="Bert pre-trained model selected in the list: bert-base-uncased, "
                         "bert-large-uncased, bert-base-cased, bert-large-cased, bert-base-multilingual-uncased, "
                         "bert-base-multilingual-cased, bert-base-chinese.")
-    parser.add_argument("--output_dir", default='output/', type=str,
+    parser.add_argument("--output_dir", default='output2/', type=str,
                         help="The output directory where the model checkpoints and predictions will be written.")
 
     ## Other parameters
@@ -906,7 +911,7 @@ def main():
                             help = 'load format of charts')
     parser.add_argument('--load_bboxes_from',
                         type = str,
-                        default = 'data/bboxes/',
+                        default = '../../../bboxes/',
                         help = "load bboxes path")
     parser.add_argument('--load_charts_from',
                             type = str,
@@ -933,13 +938,14 @@ def main():
     parser.add_argument("--n_best_size", default=20, type=int,
                         help="The total number of n-best predictions to generate in the nbest_predictions.json "
                              "output file.")
-    parser.add_argument("--max_answer_length", default=50, type=int,
+    parser.add_argument("--max_answer_length", default=128, type=int,
                         help="The maximum length of an answer that can be generated. This is needed because the start "
                              "and end predictions are not conditioned on one another.")
     parser.add_argument("--verbose_logging", action='store_true',
                         help="If true, all of the warnings related to data processing will be printed. "
                              "A number of warnings are expected for a normal SQuAD evaluation.")
     parser.add_argument("--no_cuda",
+                        default=True,
                         action='store_true',
                         help="Whether not to use CUDA when available")
     parser.add_argument('--seed',
