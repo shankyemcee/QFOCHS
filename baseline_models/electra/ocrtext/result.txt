@@ -29,7 +29,7 @@ sacreBLEU
 ***********
 BLEURT
 ***********
-0.379593565140797
+0.3647298362167155
 
 *************
 CIDEr/CIDErD
@@ -54,10 +54,10 @@ perplexity
 **********
 ***** eval metrics *****
   eval_loss               =     0.7735
-  eval_runtime            = 0:05:29.27
+  eval_runtime            = 0:03:33.12
   eval_samples            =        776
-  eval_samples_per_second =      2.357
-  eval_steps_per_second   =      0.295
+  eval_samples_per_second =      3.641
+  eval_steps_per_second   =      0.455
   perplexity              =     2.1672
 
 ####################
