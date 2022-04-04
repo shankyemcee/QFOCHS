@@ -12,7 +12,7 @@ with open("pew/t5_data/generated_predictions_sorted.txt", 'r', encoding='utf-8')
 output_list = []
 count = 0;
 for i,j in zip(actual,generated):
-    data = { "id":str(count), "text":i, "claim":j , "label":"CONSISTENT"}; count+=1;
+    data = { "id":str(count), "text":i, "claim":j , "label":"CORRECT"}; count+=1;
     output_list.append(data)
     #json_data = json.dumps(data)
     # output_dict['id'] = count; count+=1;
