@@ -37,7 +37,7 @@ print('total',good_count+complex_count+unquestionable_count)
 
 #total,average number of tokens in summary,abstractive,extractive,question,title
 #######
-all_annotations = pd.read_csv("data(full_summary_article)/all_annotations_extended.csv",encoding='utf8')
+all_annotations = pd.read_csv("data(random_article_baseline)/all_annotations_randarticle.csv",encoding='utf8')
 size = all_annotations.shape[0]
 # col_list=['summary','random_summary','abstractive_answer','extractive_answer','question','title']
 col_list=['summary','article','abstractive_answer','extractive_answer','question','title']
@@ -54,8 +54,8 @@ for col in col_list:
 
 ratio=0
 for index,row in all_annotations.iterrows():
-        # ratio+=len(row['random_summary'].split())/len(row['summary'].split())
-        ratio+=len(row['extractive_answer'].split())/len(row['article'].split())
+        ratio+=len(row['random_article'].split())/len(row['article'].split())
+        #ratio+=len(row['extractive_answer'].split())/len(row['article'].split())
 
 print(f'average percentage of tokens extracted : {round((ratio/size)*100)}%')
 

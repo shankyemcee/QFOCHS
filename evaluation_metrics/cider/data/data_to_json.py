@@ -6,7 +6,7 @@ with open("pew/bertqa_data/targetAnswers.txt", 'r',encoding='utf8') as actualfil
             actual = actualfile.readlines()
             
 
-with open("pew/bertqa_data/test_randsumm.txt", 'r',encoding='utf8') as generatedfile:
+with open("pew/bertqa_data/generatedAnswers.txt", 'r',encoding='utf8') as generatedfile:
             generated = generatedfile.readlines()
     
 output_list_actual = []
