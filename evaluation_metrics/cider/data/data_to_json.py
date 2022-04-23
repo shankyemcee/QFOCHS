@@ -2,11 +2,11 @@
 
 import json
 
-with open("pew/gpt2_data/targetAnswers.txt", 'r',encoding='utf8') as actualfile:
+with open("pew/bertqa_data/targetAnswers.txt", 'r',encoding='utf8') as actualfile:
             actual = actualfile.readlines()
             
 
-with open("pew/gpt2_data/generatedAnswers.txt", 'r',encoding='utf8') as generatedfile:
+with open("pew/bertqa_data/generatedAnswers.txt", 'r',encoding='utf8') as generatedfile:
             generated = generatedfile.readlines()
     
 output_list_actual = []
@@ -25,11 +25,11 @@ for i,j in zip(actual,generated):
 
 
       
-with open('pew/gpt2_data/targetAnswers.json','w') as f:
+with open('pew/bertqa_data/targetAnswers.json','w') as f:
     json.dump(output_list_actual,f)
 
 
-with open('pew/gpt2_data/generatedAnswers.json','w') as f:
+with open('pew/bertqa_data/generatedAnswers.json','w') as f:
     json.dump(output_list_generated,f)
 
 

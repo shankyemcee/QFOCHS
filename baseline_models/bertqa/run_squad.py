@@ -22,12 +22,21 @@ from pytorch_pretrained_bert.modeling import BertForQuestionAnswering
 from pytorch_pretrained_bert.optimization import BertAdam, warmup_linear
 from pytorch_pretrained_bert.file_utils import PYTORCH_PRETRAINED_BERT_CACHE
 
+
+from spacy.lang.en import English
+nlp = English()
+# Create a Tokenizer with the default settings for English
+# including punctuation rules and exceptions
+tokenizer = nlp.tokenizer
+from fuzzysearch import find_near_matches
+
+
 logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
                     datefmt = '%m/%d/%Y %H:%M:%S',
                     level = logging.INFO)
 logger = logging.getLogger(__name__)
 
-
+# torch.cuda.empty_cache()
 class SquadExample(object):
     """
     A single training/test example for the Squad dataset.
@@ -99,10 +108,12 @@ class InputFeatures(object):
 
 
 def find_start_n_end_index(orig_answer_text,paragraph_text):
+    #from fuzzywuzzy import fuzz
+    #pip install python-Levenshtein
     answer_list = orig_answer_text.split(" ")
     max_match = 4
-    start = -1
-    end_index = -1
+    start_index = 0
+    end_index = 1
     for i in range(max_match,0,-1):
         if paragraph_text.find(" ".join(answer_list[:i])) != -1:
             start_index = paragraph_text.find(" ".join(answer_list[:i]))
@@ -110,10 +121,51 @@ def find_start_n_end_index(orig_answer_text,paragraph_text):
             
     for i in range(max_match,0,-1):
         if paragraph_text.rfind(" ".join(answer_list[-i:])) != -1:
-            end_index = paragraph_text.rfind(" ".join(answer_list[-i:]))
-            break;    
-            
+            end_index = paragraph_text.rfind(" ".join(answer_list[-i:])) + len(" ".join(answer_list[-i:]))
+            break;
+    
+    if start_index == end_index == 0 or start_index>end_index:
+      start_index = 0
+      end_index = len(paragraph_text)-1
+      print(f"After modifying, start: {start_index} and end: {end_index}")
+    #print(orig_answer_text,paragraph_text)    
     return start_index, end_index
+
+
+def find_start_n_end_index2(orig_answer_text,paragraph_text):
+# from spacy.lang.en import English
+# nlp = English()
+# # Create a Tokenizer with the default settings for English
+# # including punctuation rules and exceptions
+# tokenizer = nlp.tokenizer
+# from fuzzysearch import find_near_matches
+    
+    
+    paragraph_text = " ".join([i.text for i in tokenizer(paragraph_text)])
+    answer_list = orig_answer_text.split(" ")
+    max_match = 4
+    start_index = 0
+    end_index = 1
+    l_dist=0
+    for i in range(max_match,0,-1):
+        answer_substring = " ".join(answer_list[:i])
+        if find_near_matches(answer_substring, paragraph_text, max_l_dist=l_dist)!=[]:
+            start_index = find_near_matches(answer_substring, paragraph_text, max_l_dist=l_dist)[0].start
+            break;
+            
+    for i in range(max_match,0,-1):
+        answer_substring = " ".join(answer_list[-i:])
+        if find_near_matches(answer_substring, paragraph_text, max_l_dist=l_dist)!=[]:
+            end_index = find_near_matches(answer_substring, paragraph_text, max_l_dist=l_dist)[0].end
+            break;
+    
+    if start_index == end_index == 0 or start_index>end_index:
+      start_index = 0
+      end_index = len(paragraph_text)-1
+      print(f"After modifying, start: {start_index} and end: {end_index}")
+    #print(orig_answer_text,paragraph_text)    
+    return start_index, end_index
+
 
 
 
@@ -142,6 +194,10 @@ def read_examples(args, input_file, is_training, version_2_with_negative):
     for entry in input_data:
         # for paragraph in entry["paragraphs"]:
             paragraph_text = input_data[entry][2]
+            answer = input_data[entry][6]
+            if is_training:
+                start_index, end_index = find_start_n_end_index2(answer,paragraph_text)
+            paragraph_text = paragraph_text[max(0,start_index):end_index]
             doc_tokens = []
             char_to_word_offset = []
             prev_is_whitespace = True
@@ -158,7 +214,7 @@ def read_examples(args, input_file, is_training, version_2_with_negative):
 
             # for qa in paragraph["qas"]:
             qas_id = input_data[entry][0].replace(".png","")
-            question_text = input_data[entry][3]
+            question_text = input_data[entry][4]
             start_position = None
             end_position = None
             orig_answer_text = None
@@ -170,12 +226,19 @@ def read_examples(args, input_file, is_training, version_2_with_negative):
                 #     raise ValueError(
                 #         "For training, each question should have exactly 1 answer.")
                 # if not is_impossible:
-                    answer = input_data[entry][5]
+                    
                     orig_answer_text = answer
-                    start_index, end_index = find_start_n_end_index(orig_answer_text,paragraph_text)
+                    start_index, end_index = find_start_n_end_index2(orig_answer_text,paragraph_text)
+                    
                     # answer_length = len(orig_answer_text)
                     start_position = char_to_word_offset[start_index]
                     end_position = char_to_word_offset[end_index - 1]
+                    
+                    
+                    
+                    if end_position-start_position>args.max_answer_length:
+                        end_position = start_position + args.max_answer_length - 1
+                    
                     # Only add answers where the text can be exactly recovered from the
                     # document. If this CAN'T happen it's likely due to weird Unicode
                     # stuff so we will just skip the example.
@@ -199,7 +262,8 @@ def read_examples(args, input_file, is_training, version_2_with_negative):
             if args.chart_load_format == 'bbox':
                 bbox_file = input_data[entry][0].replace('.png','.json')
                 bbox = load_json(args.load_bboxes_from+bbox_file)
-                chart_embedding = " | ".join([str(i['sentence'])+"- "+str(i['bounding_box']) for i in bbox]) #bbox as source
+                chart_embedding = " . ".join([str(i['sentence']) +" - "+str(i['bounding_box']) for i in bbox]) #bbox as source
+                #chart_embedding = " . ".join([str(i['sentence']) for i in bbox])
             else:   #else it is krl
                 chart_embedding = [] #summary as source 
             
@@ -208,12 +272,12 @@ def read_examples(args, input_file, is_training, version_2_with_negative):
             
             
             
-            
+                
             
             
             example = SquadExample(
                 qas_id=qas_id,
-                question_text= question_text + " [SEP] " + title + " [SEP] " + chart_embedding,
+                question_text=  question_text +  title + chart_embedding,
                 doc_tokens=doc_tokens,
                 orig_answer_text=orig_answer_text,
                 start_position=start_position,
@@ -310,6 +374,7 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
 
     features = []
     for (example_index, example) in enumerate(examples):
+        print(f"Doing {example_index}")
         query_tokens = tokenizer.tokenize(example.question_text)
 
         if len(query_tokens) > max_query_length:
@@ -443,8 +508,7 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
                     answer_text = " ".join(tokens[start_position:(end_position + 1)])
                     logger.info("start_position: %d" % (start_position))
                     logger.info("end_position: %d" % (end_position))
-                    logger.info(
-                        "answer: %s" % (answer_text))
+                    logger.info("answer: %s" % (answer_text))
 
             features.append(
                 InputFeatures(
@@ -889,16 +953,16 @@ def main():
     parser = argparse.ArgumentParser()
 
     ## Required parameters
-    parser.add_argument("--bert_model", default='bert-large-uncased', type=str,
+    parser.add_argument("--bert_model", default="bert-large-uncased", type=str,
                         help="Bert pre-trained model selected in the list: bert-base-uncased, "
                         "bert-large-uncased, bert-base-cased, bert-large-cased, bert-base-multilingual-uncased, "
                         "bert-base-multilingual-cased, bert-base-chinese.")
-    parser.add_argument("--output_dir", default='output/', type=str,
+    parser.add_argument("--output_dir", default='output2/', type=str,
                         help="The output directory where the model checkpoints and predictions will be written.")
 
     ## Other parameters
-    parser.add_argument("--train_file", default='data/train.json', type=str, help="SQuAD json for training. E.g., train-v1.1.json")
-    parser.add_argument("--predict_file", default='data/test.json', type=str,
+    parser.add_argument("--train_file", default='data/train_fake.json', type=str, help="SQuAD json for training. E.g., train-v1.1.json")
+    parser.add_argument("--predict_file", default='data/test_fake.json', type=str,
                         help="SQuAD json for predictions. E.g., dev-v1.1.json or test-v1.1.json")
     parser.add_argument('--chart_load_format',
                             type = str,
@@ -906,7 +970,7 @@ def main():
                             help = 'load format of charts')
     parser.add_argument('--load_bboxes_from',
                         type = str,
-                        default = 'data/bboxes/',
+                        default = '../../../bboxes/',
                         help = "load bboxes path")
     parser.add_argument('--load_charts_from',
                             type = str,
@@ -915,7 +979,7 @@ def main():
     parser.add_argument("--max_seq_length", default=512, type=int,
                         help="The maximum total input sequence length after WordPiece tokenization. Sequences "
                              "longer than this will be truncated, and sequences shorter than this will be padded.")
-    parser.add_argument("--doc_stride", default=128, type=int,
+    parser.add_argument("--doc_stride", default=512, type=int,
                         help="When splitting up a long document into chunks, how much stride to take between chunks.")
     parser.add_argument("--max_query_length", default=64, type=int,
                         help="The maximum number of tokens for the question. Questions longer than this will "
@@ -933,7 +997,7 @@ def main():
     parser.add_argument("--n_best_size", default=20, type=int,
                         help="The total number of n-best predictions to generate in the nbest_predictions.json "
                              "output file.")
-    parser.add_argument("--max_answer_length", default=50, type=int,
+    parser.add_argument("--max_answer_length", default=128, type=int,
                         help="The maximum length of an answer that can be generated. This is needed because the start "
                              "and end predictions are not conditioned on one another.")
     parser.add_argument("--verbose_logging", action='store_true',
@@ -974,7 +1038,7 @@ def main():
                         type=float, default=0.0,
                         help="If null_score - best_non_null is greater than the threshold predict null.")
     args = parser.parse_args()
-
+    
     if args.local_rank == -1 or args.no_cuda:
         device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
         n_gpu = torch.cuda.device_count()
@@ -1155,8 +1219,9 @@ def main():
         model_state_dict = torch.load(output_model_file)
         model = BertForQuestionAnswering.from_pretrained(args.bert_model, state_dict=model_state_dict)
     else:
-        model = BertForQuestionAnswering.from_pretrained(args.bert_model)
-
+        model_state_dict = torch.load(os.path.join(args.output_dir, "pytorch_model.bin"))
+        model = BertForQuestionAnswering.from_pretrained(args.bert_model, state_dict=model_state_dict)
+   
     model.to(device)
 
     if args.do_predict and (args.local_rank == -1 or torch.distributed.get_rank() == 0):
