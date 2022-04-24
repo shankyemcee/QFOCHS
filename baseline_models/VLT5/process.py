@@ -2,7 +2,7 @@ import csv
 import os
 
 FOLDER_PATH = '/Users/doxuanlong/Desktop/NTUNLP/OpenCQA/QFOCHS/baseline_models/VLT5'
-FILE = 'Q_T_OCRs_bbox_article'
+FILE = 'Q_OCRs_article'
 T5_BASE_PATH = '/Users/doxuanlong/Desktop/NTUNLP/OpenCQA/QFOCHS/baseline_models/VLT5/T5-base.txt'
 
 GENERATED_PATH = os.path.join(FOLDER_PATH, FILE) + '/generated.txt'
