@@ -6,7 +6,7 @@ import json
 import math
 
 ocr_dir = "../../../bboxes/"
-generated_path ="targetAnswers.txt"
+generated_path ="generatedAnswers_bertqa.txt"
 reference_path = "../data/test.json"
 
 with open(generated_path,'r',encoding='utf8') as f:
@@ -16,7 +16,7 @@ with open(reference_path,'r',encoding='utf8') as f:
     test = json.load(f)
 
 
-
+#now named cef-precision
 def calc_recall_ief(line_no,tokens,ocr):
     ocr_text = " ".join([key['sentence'] for key in ocr])
     ocr_text = " ".join(list(filter(lambda x: x not in fillers, set(ocr_text.split()))))
@@ -26,10 +26,9 @@ def calc_recall_ief(line_no,tokens,ocr):
     for token in tokens:
         if token.lower() in ocr_text.lower():
             matches+=1
-    #return matches/len(ocr_text.split())
     return matches/len(tokens)
 
-
+#now named cef-recall
 def calc_micro_ief(line_no,tokens,ocr):
     region_scores = []  #extraction score for each region
     weighted_region_scores = []
@@ -45,23 +44,19 @@ def calc_micro_ief(line_no,tokens,ocr):
             continue
         region_scores.append((counter/len_))
         weighted_region_scores.append((counter/len_) * math.exp(len_))
-        #weighted_region_scores.append(counter)
         lens_.append(len_)
     sum_ = sum(weighted_region_scores)
     if sum_==0:
       print("Current summary extracts no ocr elements: ", line_no)
       return 0
     else:
-        # normalized_region_scores = [i/sum_ for i in weighted_region_scores]
         max_ = max(weighted_region_scores)
         normalized_region_scores = [i/max_ for i in weighted_region_scores]
         
-    #return max(normalized_region_scores)
     return sum(normalized_region_scores)/len(normalized_region_scores)
 
+#now named cef-coverage
 def calc_macro_ief(line_no,tokens,ocr):
-    # ocr_text = " ".join([key['sentence'] for key in ocr])
-    # ocr_text = " ".join(list(filter(lambda x: x not in fillers, set(ocr_text.split()))))
     lookup=[0]*len(ocr)
     for token in tokens:
         for index,key in enumerate(ocr):
@@ -88,9 +83,9 @@ for index,key in enumerate(test):
     recall_ief+=calc_recall_ief(index,tokens,ocr)
 
 print(generated_path)
-print("micro information extraction factor: ", round(micro_ief/(index+1)*100,2))
-print("macro information extraction factor: ", round(macro_ief/(index+1)*100,2))
-print("recall information extraction factor: ", round(recall_ief/(index+1)*100,2))
+print("micro information extraction factor: ", micro_ief/(index+1))
+print("macro information extraction factor: ", macro_ief/(index+1))
+print("recall information extraction factor: ", recall_ief/(index+1))
 
 
 
