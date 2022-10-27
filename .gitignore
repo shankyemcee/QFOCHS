@@ -10,3 +10,8 @@ baseline_models/doc2grnd/__pycache__/*
 baseline_models/bertqa/__pycache__/*
 baseline_models/bertqa/output/__pycache__/*
 evaluation_metrics/squad_eval/__pycache__/*
+baseline_models/*
+etc/*
+human_evaluation/*
+human_evaluation_old/*
+mturk_study/*

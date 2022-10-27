@@ -2,21 +2,31 @@ import pandas as pd
 import random
 
 GOLD_STANDARD = "Gold Standard"
-T5_BBOX = "T5_BBOX"
-T5 = "T5"
+T5_BBOX = "VLT5_S"
+T5 = "VLT5"
 PAIRS = [
-	(GOLD_STANDARD, T5_BBOX, T5),
-	(GOLD_STANDARD, T5, T5_BBOX),
-	(T5, GOLD_STANDARD, T5_BBOX),
+ 	(GOLD_STANDARD, T5_BBOX, T5),
+ 	(GOLD_STANDARD, T5, T5_BBOX),
+ 	(T5, GOLD_STANDARD, T5_BBOX),
     (T5, T5_BBOX, GOLD_STANDARD),
     (T5_BBOX, T5, GOLD_STANDARD),
     (T5_BBOX, GOLD_STANDARD, T5)
     
 ]
+#for cs study
+# PAIRS = [
+# 	(GOLD_STANDARD, T5_BBOX, T5),
+# 	(GOLD_STANDARD, T5_BBOX, T5),
+# 	(GOLD_STANDARD, T5_BBOX, T5),
+#     (GOLD_STANDARD, T5_BBOX, T5),
+#     (GOLD_STANDARD, T5_BBOX, T5),
+#     (GOLD_STANDARD, T5_BBOX, T5),
+    
+# ]
 
 output_files = {
-	T5_BBOX: "t5_bbox(without_summary)/t5-bbox.txt",
-	T5: "t5_with_summary/t5.txt",
+	T5_BBOX: "vlt5_with_summary/vlt5.txt",
+	T5: "vlt5(without_summary)/vlt5.txt",
 }
 
 df = pd.read_csv("../dataset/test_sample.csv")

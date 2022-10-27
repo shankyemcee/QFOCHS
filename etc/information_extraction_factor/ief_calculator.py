@@ -16,8 +16,8 @@ with open(reference_path,'r',encoding='utf8') as f:
     test = json.load(f)
 
 
-#now named cef-precision
-def calc_recall_ief(line_no,tokens,ocr):
+
+def calc_recall_precision_cef(line_no,tokens,ocr):
     ocr_text = " ".join([key['sentence'] for key in ocr])
     ocr_text = " ".join(list(filter(lambda x: x not in fillers, set(ocr_text.split()))))
     matches=0
@@ -26,10 +26,10 @@ def calc_recall_ief(line_no,tokens,ocr):
     for token in tokens:
         if token.lower() in ocr_text.lower():
             matches+=1
-    return matches/len(tokens)
+    return matches/len(ocr_text.split()) , matches/len(tokens)
 
-#now named cef-recall
-def calc_micro_ief(line_no,tokens,ocr):
+
+def calc_recall_cef(line_no,tokens,ocr):
     region_scores = []  #extraction score for each region
     weighted_region_scores = []
     lens_ = []
@@ -55,8 +55,13 @@ def calc_micro_ief(line_no,tokens,ocr):
         
     return sum(normalized_region_scores)/len(normalized_region_scores)
 
-#now named cef-coverage
-def calc_macro_ief(line_no,tokens,ocr):
+
+
+
+
+
+
+def calc_coverage_cef(line_no,tokens,ocr):
     lookup=[0]*len(ocr)
     for token in tokens:
         for index,key in enumerate(ocr):
@@ -68,9 +73,10 @@ def calc_macro_ief(line_no,tokens,ocr):
 fillers = ['in', 'the', 'and', 'or', 'an', 'as', 'can', 'be', 'a', ':', '-',
            'to', 'but', 'is', 'of', 'it', 'on', '.', 'at', '(', ')', ',', ';']
 
-micro_ief=0
-macro_ief=0
-recall_ief=0
+#micro_ief=0
+coverage_cef=0
+recall_cef=0
+precision_cef=0
 
 for index,key in enumerate(test):
     file_no = test[key][0]
@@ -78,14 +84,16 @@ for index,key in enumerate(test):
         ocr = json.load(f)
     summary = generated[index]
     tokens = list(filter(lambda x: x not in fillers, set(summary.split())))
-    micro_ief+=calc_micro_ief(index,tokens,ocr)
-    macro_ief+=calc_macro_ief(index,tokens,ocr)
-    recall_ief+=calc_recall_ief(index,tokens,ocr)
+    #micro_ief+=calc_micro_ief(index,tokens,ocr)
+    coverage_cef+=calc_coverage_cef(index,tokens,ocr)
+    tuple_ = calc_recall_precision_cef(index,tokens,ocr)
+    recall_cef += tuple_[0]
+    precision_cef += tuple_[1]
 
 print(generated_path)
-print("micro information extraction factor: ", micro_ief/(index+1))
-print("macro information extraction factor: ", macro_ief/(index+1))
-print("recall information extraction factor: ", recall_ief/(index+1))
+print("Chart Extraction Factor(Recall): ", recall_cef/(index+1))
+print("Chart Extraction Factor(Coverage): ", coverage_cef/(index+1))
+print("Chart Extraction Factor(Precision):: ", precision_cef/(index+1))
 
 
 

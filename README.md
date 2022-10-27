@@ -1,2 +1,2 @@
 # QFOCHS
-Query Focused Chart Summarization
+Please refer to new repository:  https://github.com/vis-nlp/OpenCQA
